@@ -20,6 +20,7 @@ export const baseTextInputStyles = StyleSheet.create({
     elevation: 2,
     borderWidth: 1,
     minHeight: 64,
+    borderColor: colors.white
   },
   focusedWrapper: {
     borderColor: colors.black,
@@ -46,7 +47,7 @@ export const baseTextInputStyles = StyleSheet.create({
     width: '100%',
   },
   errorText: {
-    ...Typography.regular12,
+    ...Typography.regular14,
     color: colors.red,
     marginTop: 4,
     marginLeft: 16,

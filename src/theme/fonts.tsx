@@ -36,6 +36,9 @@ const Typography = {
   },
   regular30: {
     fontSize: getFontSize(30),
+  }, 
+  regular34: {
+    fontSize: getFontSize(34),
   },
 
   // Font sizes with weight 500 (Medium)

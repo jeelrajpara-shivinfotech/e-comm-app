@@ -13,8 +13,6 @@ export const baseButtonStyles = StyleSheet.create({
   },
   content: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
   text: {
     ...Typography.regular16,
