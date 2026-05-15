@@ -12,7 +12,7 @@ import {
 import { baseButtonStyles as styles } from './baseButton.styles';
 import { colors } from '../../theme';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 interface BaseButtonProps extends TouchableOpacityProps {
@@ -82,7 +82,7 @@ const BaseButton: React.FC<BaseButtonProps> = ({
     );
   };
 
-  const loaderColor = variant === 'outline' || variant === 'ghost' ? colors.red : colors.white;
+  const loaderColor = variant === 'outline' ? colors.red : colors.white;
 
   return (
     <TouchableOpacity

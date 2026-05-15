@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../theme";
+import Typography from "../../theme/fonts";
 
 export const baseTextInputStyles = StyleSheet.create({
   container: {
@@ -12,13 +13,12 @@ export const baseTextInputStyles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
     borderWidth: 1,
-    borderColor: "transparent",
     minHeight: 64,
   },
   focusedWrapper: {
@@ -28,7 +28,7 @@ export const baseTextInputStyles = StyleSheet.create({
     borderColor: colors.red,
   },
   successWrapper: {
-    borderColor: "#2AA952",
+    borderColor: colors.green,
   },
   content: {
     flex: 1,
@@ -37,17 +37,16 @@ export const baseTextInputStyles = StyleSheet.create({
     position: 'relative',
   },
   label: {
-    fontWeight: "400",
+    ...Typography.regular14,
   },
   input: {
-    fontSize: 14,
+    ...Typography.regular14,
     color: colors.black,
-    fontWeight: "500",
     padding: 0,
     width: '100%',
   },
   errorText: {
-    fontSize: 11,
+    ...Typography.regular12,
     color: colors.red,
     marginTop: 4,
     marginLeft: 16,

@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../theme";
+import Typography from "../../theme/fonts";
 
 export const baseButtonStyles = StyleSheet.create({
   container: {
@@ -16,7 +17,7 @@ export const baseButtonStyles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontSize: 16,
+    ...Typography.regular16,
     fontWeight: "600",
     textAlign: "center",
     textTransform: "uppercase",
@@ -39,15 +40,11 @@ export const baseButtonStyles = StyleSheet.create({
     elevation: 5,
   },
   outline: {
-    backgroundColor: "transparent",
     borderWidth: 2,
     borderColor: colors.red,
   },
-  ghost: {
-    backgroundColor: "transparent",
-  },
   danger: {
-    backgroundColor: "#FF4D4F",
+    backgroundColor: colors.dangerRed,
   },
   // Sizes
   xs: {
