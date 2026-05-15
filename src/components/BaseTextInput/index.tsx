@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import { baseTextInputStyles as styles } from './baseTextInput.styles';
 import { colors } from '../../theme';
-import RightIcon from '../../assets/svg/RightIcon';
+import CheckIcon from '../../assets/svg/CheckIcon';
+import CloseIcon from '../../assets/svg/CloseIcon';
 
 interface BaseTextInputProps extends TextInputProps {
   label: string;
@@ -44,20 +45,26 @@ const BaseTextInput: React.FC<BaseTextInputProps> = ({
   const animatedValue = useRef(new Animated.Value(textValue ? 1 : 0)).current;
 
   useEffect(() => {
+    if (value !== undefined) {
+      setTextValue(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
     Animated.timing(animatedValue, {
-      toValue: (isFocused || textValue) ? 1 : 0,
+      toValue: isFocused || textValue ? 1 : 0,
       duration: 200,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: false,
     }).start();
   }, [isFocused, textValue]);
 
-  const handleFocus = (e: any) => {
+  const handleFocus: TextInputProps['onFocus'] = e => {
     setIsFocused(true);
     onFocus && onFocus(e);
   };
 
-  const handleBlur = (e: any) => {
+  const handleBlur: TextInputProps['onBlur'] = e => {
     setIsFocused(false);
     onBlur && onBlur(e);
   };
@@ -71,7 +78,11 @@ const BaseTextInput: React.FC<BaseTextInputProps> = ({
     return [
       styles.inputWrapper,
       isFocused && styles.focusedWrapper,
-      error ? styles.errorWrapper : (textValue && !isFocused ? styles.successWrapper : null),
+      error
+        ? styles.errorWrapper
+        : textValue && !isFocused
+        ? styles.successWrapper
+        : null,
       inputWrapperStyle,
     ];
   };
@@ -95,14 +106,14 @@ const BaseTextInput: React.FC<BaseTextInputProps> = ({
     if (error) {
       return (
         <View style={styles.iconRight}>
-          <RightIcon/>
+          <CloseIcon />
         </View>
       );
     }
     if (textValue && !error) {
       return (
         <View style={styles.iconRight}>
-          <RightIcon/>
+          <CheckIcon />
         </View>
       );
     }
@@ -141,16 +152,13 @@ const BaseTextInput: React.FC<BaseTextInputProps> = ({
             onBlur={handleBlur}
             onChangeText={handleChangeText}
             secureTextEntry={secureTextEntry}
-            value={textValue}
             {...props}
+            value={textValue}
           />
         </View>
         {renderRightIcon()}
       </View>
-      
-      {error && (
-        <Text style={[styles.errorText, errorStyle]}>{error}</Text>
-      )}
+      {error && <Text style={[styles.errorText, errorStyle]}>{error}</Text>}
     </View>
   );
 };
