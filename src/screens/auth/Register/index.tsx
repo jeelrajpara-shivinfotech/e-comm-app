@@ -35,10 +35,10 @@ interface RegisterValues {
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required(RequiredField(signUpPageConstants.name)),
   email: Yup.string()
-    .required(RequiredField(signUpPageConstants.email))
+    .required(RequiredField(loginPageConstants.email))
     .matches(emailRegex, loginPageConstants.invalidEmail),
   password: Yup.string()
-    .required(RequiredField(signUpPageConstants.password))
+    .required(RequiredField(loginPageConstants.password))
     .matches(passwordRegex, loginPageConstants.minPassword),
 });
 
@@ -79,7 +79,7 @@ const Register = () => {
             />
 
             <BaseTextInput
-              label={signUpPageConstants.email}
+              label={loginPageConstants.email}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
@@ -90,7 +90,7 @@ const Register = () => {
             />
 
             <BaseTextInput
-              label={signUpPageConstants.password}
+              label={loginPageConstants.password}
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}

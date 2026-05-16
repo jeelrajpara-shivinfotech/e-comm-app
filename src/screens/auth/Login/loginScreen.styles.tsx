@@ -8,7 +8,7 @@ export const loginScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    marginVertical: 60,
+    paddingVertical: 60,
   },
   backButton: {
     marginBottom: 40,
@@ -72,7 +72,7 @@ export const loginScreenStyles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 1,

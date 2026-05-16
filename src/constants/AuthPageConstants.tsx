@@ -10,15 +10,11 @@ export const loginPageConstants = {
   name: 'Name',
   loginDescription : "Or login with social account",
   noAccount: "Don't have an account?",
-  emailSmall : "email",
-  passwordSmall : "password"
 };
 
 export const signUpPageConstants = {
   signUpTitle: "Sign up",
   name: "Name",
-  email: "Email",
-  password: "Password",
   alreadyHaveAccount: "Already have an account?",
   signUpDescription: "Or sign up with social account",
 };
@@ -27,5 +23,4 @@ export const forgotPasswordPageConstants = {
   forgotPasswordTitle: "Forgot password",
   forgotPasswordDescription: "Please, enter your email address. You will receive a link to create a new password via email.",
   send: "SEND",
-  email: "Email",
 };

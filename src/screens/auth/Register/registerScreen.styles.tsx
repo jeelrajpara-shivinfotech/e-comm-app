@@ -8,7 +8,7 @@ export const registerScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    marginVertical: 60,
+    paddingVertical: 60,
   },
   backButton: {
     marginBottom: 40,

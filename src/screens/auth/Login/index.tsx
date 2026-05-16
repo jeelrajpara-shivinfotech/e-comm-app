@@ -68,8 +68,8 @@ const Login = () => {
           <View style={styles.formContainer}>
             <BaseTextInput
               label={loginPageConstants.email}
-              onChangeText={handleChange(loginPageConstants.emailSmall)}
-              onBlur={handleBlur(loginPageConstants.emailSmall)}
+              onChangeText={handleChange(loginPageConstants.email.toLowerCase())}
+              onBlur={handleBlur(loginPageConstants.email.toLowerCase())}
               value={values.email}
               error={touched.email && errors.email ? errors.email : undefined}
               keyboardType="email-address"
@@ -79,8 +79,8 @@ const Login = () => {
 
             <BaseTextInput
               label={loginPageConstants.password}
-              onChangeText={handleChange(loginPageConstants.passwordSmall)}
-              onBlur={handleBlur(loginPageConstants.passwordSmall)}
+              onChangeText={handleChange(loginPageConstants.password.toLowerCase())}
+              onBlur={handleBlur(loginPageConstants.password.toLowerCase())}
               value={values.password}
               error={
                 touched.password && errors.password

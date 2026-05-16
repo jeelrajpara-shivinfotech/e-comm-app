@@ -27,7 +27,7 @@ interface ForgotPasswordValues {
 
 const ForgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
-    .required(RequiredField(forgotPasswordPageConstants.email))
+    .required(RequiredField(loginPageConstants.email))
     .matches(emailRegex, loginPageConstants.invalidEmail),
 });
 
@@ -74,9 +74,9 @@ const ForgotPassword = () => {
         }) => (
           <View style={styles.formContainer}>
             <BaseTextInput
-              label={forgotPasswordPageConstants.email}
-              onChangeText={handleChange(loginPageConstants.emailSmall)}
-              onBlur={handleBlur(loginPageConstants.emailSmall)}
+              label={loginPageConstants.email}
+              onChangeText={handleChange(loginPageConstants.email.toLowerCase())}
+              onBlur={handleBlur(loginPageConstants.email.toLowerCase())}
               value={values.email}
               error={touched.email && errors.email ? errors.email : undefined}
               keyboardType="email-address"

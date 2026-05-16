@@ -6,7 +6,7 @@ export const forgotPasswordScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    marginVertical: 60,
+    paddingVertical: 60,
   },
   backButton: {
     marginBottom: 20,
