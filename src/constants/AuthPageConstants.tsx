@@ -30,7 +30,10 @@ export const signUpPageConstants = {
   country: "Country",
   state: "State",
   city: "City",
-  postalCode: "Postal Code"
+  postalCode: "Postal Code",
+  invalidPhoneNumber: 'Phone number should be in correct format.',
+  postalCodeMustBeNumber: 'Postal Code must be a number.',
+  phoneNumberMaxLength: 'Please enter a valid 10 digit phone number.',
 };
 
 export const forgotPasswordPageConstants = {
