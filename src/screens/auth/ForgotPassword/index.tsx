@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { forgotPasswordScreenStyles as styles } from './forgotPasswordScreen.styles';
@@ -32,33 +33,32 @@ const ForgotPasswordSchema = Yup.object().shape({
 });
 
 const ForgotPassword = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
   const handleSend = (values: ForgotPasswordValues) => {
     console.info('Forgot password email:', values.email);
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ flexGrow: 1 }}
-      style={styles.container}
-    >
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
         <BackIcon />
       </TouchableOpacity>
-
       <Text style={styles.headerText}>
         {forgotPasswordPageConstants.forgotPasswordTitle}
       </Text>
-
       <Text style={styles.descriptionText}>
         {forgotPasswordPageConstants.forgotPasswordDescription}
       </Text>
-
       <Formik
         initialValues={{ email: '' }}
         validationSchema={ForgotPasswordSchema}
@@ -81,7 +81,6 @@ const ForgotPassword = () => {
               error={touched.email && errors.email ? errors.email : undefined}
               keyboardType="email-address"
               autoCapitalize="none"
-              containerStyle={styles.inputContainer}
             />
 
             <BaseButton
@@ -91,10 +90,23 @@ const ForgotPassword = () => {
               fullWidth
               size="lg"
             />
+            <TouchableOpacity
+              style={styles.backToLoginRow}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.backToLoginText}>
+                {forgotPasswordPageConstants.rememberPassword}
+              </Text>
+              <Text style={styles.backToLoginLink}>
+                {forgotPasswordPageConstants.signIn}
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </Formik>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

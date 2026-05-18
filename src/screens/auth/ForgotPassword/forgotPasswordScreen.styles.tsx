@@ -1,44 +1,62 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme';
 import Typography from '../../../theme/fonts';
 
 export const forgotPasswordScreenStyles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    padding: 16,
-    paddingVertical: 60,
+    backgroundColor: colors.lightGray,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 48,
+    paddingTop: 80,
   },
   backButton: {
-    marginBottom: 20,
+    marginBottom: 24,
+    alignSelf: 'flex-start',
   },
   headerText: {
     ...Typography.regular34,
     fontWeight: 'bold',
     color: colors.black,
-    marginBottom: 60,
+    marginBottom: 8,
+    lineHeight: 34
   },
   descriptionText: {
-    ...Typography.regular16,
+    ...Typography.regular18,
     color: colors.black,
-    marginBottom: 16,
-    lineHeight: 20,
-    fontWeight: 500
+    marginBottom: 32,
+    lineHeight: 24,
+    fontWeight: 400,
+    marginTop : 50
   },
   formContainer: {
     width: '100%',
   },
-  inputContainer: {
-    marginBottom: 32,
-  },
   sendButton: {
-    marginTop: 32,
+    marginTop: 24,
     shadowColor: colors.red,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
     elevation: 8,
+  },
+  backToLoginRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  backToLoginText: {
+    ...Typography.regular16,
+    color: colors.black,
+    marginRight: 4,
+  },
+  backToLoginLink: {
+    ...Typography.regular16,
+    color: colors.red,
+    fontWeight: '700',
   },
 });
