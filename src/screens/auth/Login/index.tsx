@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -33,7 +41,40 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      if (token) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'BottomTabs' }],
+        });
+      }
+    };
+    checkToken();
+  }, [navigation]);
   const [loading, setLoading] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const handleLogin = async (values: LoginValues) => {
     setLoading(true);
@@ -45,6 +86,10 @@ const Login = () => {
     await handleApiResponse(apiCall, response => {
       if (response?.data?.token) {
         AsyncStorage.setItem('authToken', response.data.token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'BottomTabs' }],
+        });
       }
     });
 
@@ -53,104 +98,109 @@ const Login = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        enabled={keyboardVisible}
+        style={{ flex: 1 }}
       >
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <BackIcon />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{loginPageConstants.loginTitle}</Text>
-        <Text style={styles.subHeaderText}>
-          {loginPageConstants.welcomeBack}
-        </Text>
+          <Text style={styles.headerText}>{loginPageConstants.loginTitle}</Text>
+          <Text style={styles.subHeaderText}>
+            {loginPageConstants.welcomeBack}
+          </Text>
 
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={LoginSchema}
-          onSubmit={handleLogin}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
-            <View style={styles.formContainer}>
-              <BaseTextInput
-                label={loginPageConstants.email}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                error={touched.email && errors.email ? errors.email : undefined}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={LoginSchema}
+            onSubmit={handleLogin}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <View style={styles.formContainer}>
+                <BaseTextInput
+                  label={loginPageConstants.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  error={
+                    touched.email && errors.email ? errors.email : undefined
+                  }
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
 
-              <BaseTextInput
-                label={loginPageConstants.password}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                error={
-                  touched.password && errors.password
-                    ? errors.password
-                    : undefined
-                }
-                secureTextEntry
-              />
-              <TouchableOpacity
-                style={styles.forgotPasswordContainer}
-                onPress={() => navigation.navigate('ForgotPasswordScreen')}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.forgotPasswordText}>
-                  {loginPageConstants.forgotPassword}
-                </Text>
+                <BaseTextInput
+                  label={loginPageConstants.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  error={
+                    touched.password && errors.password
+                      ? errors.password
+                      : undefined
+                  }
+                  secureTextEntry
+                />
+                <TouchableOpacity
+                  style={styles.forgotPasswordContainer}
+                  onPress={() => navigation.navigate('ForgotPasswordScreen')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.forgotPasswordText}>
+                    {loginPageConstants.forgotPassword}
+                  </Text>
+                </TouchableOpacity>
+                <BaseButton
+                  title={loginPageConstants.loginTitle}
+                  onPress={() => handleSubmit()}
+                  containerStyle={styles.loginButton}
+                  fullWidth
+                  size="lg"
+                  isLoading={loading}
+                />
+                <TouchableOpacity
+                  style={styles.signUpRow}
+                  onPress={() => navigation.navigate('RegisterScreen')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.signUpText}>
+                    {loginPageConstants.noAccount}
+                  </Text>
+                  <Text style={styles.signUpLink}>Sign Up</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
+          <View style={styles.orRow}>
+            <View style={styles.orLine} />
+            <Text style={styles.orText}>
+              {loginPageConstants.orContinueWith}
+            </Text>
+            <View style={styles.orLine} />
+          </View>
+          <View style={styles.socialContainer}>
+            <View style={styles.socialButtonsRow}>
+              <TouchableOpacity style={styles.socialButton}>
+                <GoogleIcon />
               </TouchableOpacity>
-              <BaseButton
-                title={loginPageConstants.loginTitle}
-                onPress={() => handleSubmit()}
-                containerStyle={styles.loginButton}
-                fullWidth
-                size="lg"
-                isLoading={loading}
-              />
-              <TouchableOpacity
-                style={styles.signUpRow}
-                onPress={() => navigation.navigate('RegisterScreen')}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.signUpText}>
-                  {loginPageConstants.noAccount}
-                </Text>
-                <Text style={styles.signUpLink}>Sign Up</Text>
+              <TouchableOpacity style={styles.socialButton}>
+                <FacebookIcon />
               </TouchableOpacity>
             </View>
-          )}
-        </Formik>
-        <View style={styles.orRow}>
-          <View style={styles.orLine} />
-          <Text style={styles.orText}>{loginPageConstants.orContinueWith}</Text>
-          <View style={styles.orLine} />
-        </View>
-        <View style={styles.socialContainer}>
-          <View style={styles.socialButtonsRow}>
-            <TouchableOpacity style={styles.socialButton}>
-              <GoogleIcon />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <FacebookIcon />
-            </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

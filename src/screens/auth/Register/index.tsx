@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -107,6 +115,26 @@ const Register = () => {
   );
   const [states, setStates] = useState<{ id: number; label: string }[]>([]);
   const [cities, setCities] = useState<{ id: number; label: string }[]>([]);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     handleApiResponse(
@@ -169,263 +197,276 @@ const Register = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        enabled={keyboardVisible}
+        style={{ flex: 1 }}
       >
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.navigate('LoginScreen')}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <BackIcon />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{signUpPageConstants.signUpTitle}</Text>
-        <Text style={styles.subHeaderText}>
-          {signUpPageConstants.fillInDetails}
-        </Text>
-        <Formik
-          initialValues={{
-            name: '',
-            email: '',
-            password: '',
-            phone_number: '',
-            gender: '',
-            address: {
-              country_id: '',
-              state_id: '',
-              city_id: '',
-              postal_code: '',
-              label: '',
-              address_line1: '',
-              address_line2: '',
-            },
-          }}
-          validationSchema={RegisterSchema}
-          onSubmit={handleRegister}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-            values,
-            errors,
-            touched,
-          }) => (
-            <View style={styles.formContainer}>
-              <Text style={styles.sectionLabel}>
-                {signUpPageConstants.personalInformation}
-              </Text>
-              <View style={styles.sectionDivider} />
-
-              <BaseTextInput
-                label={signUpPageConstants.name}
-                onChangeText={handleChange('name')}
-                onBlur={handleBlur('name')}
-                value={values.name}
-                error={touched.name && errors.name ? errors.name : undefined}
-              />
-
-              <BaseTextInput
-                label={loginPageConstants.email}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                error={touched.email && errors.email ? errors.email : undefined}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-
-              <BaseTextInput
-                label={loginPageConstants.password}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                error={
-                  touched.password && errors.password
-                    ? errors.password
-                    : undefined
-                }
-                secureTextEntry
-              />
-
-              <BaseTextInput
-                label={signUpPageConstants.phoneNumber}
-                onChangeText={handleChange('phone_number')}
-                onBlur={handleBlur('phone_number')}
-                value={values.phone_number}
-                error={
-                  touched.phone_number && errors.phone_number
-                    ? errors.phone_number
-                    : undefined
-                }
-                keyboardType="phone-pad"
-                maxLength={10}
-              />
-
-              <BaseRadio
-                label={signUpPageConstants.gender}
-                options={genders.map(g => ({
-                  label: g,
-                  value: g.toLowerCase(),
-                }))}
-                selectedValue={values.gender}
-                onSelect={value => setFieldValue('gender', value)}
-                error={
-                  touched.gender && errors.gender ? errors.gender : undefined
-                }
-              />
-              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>
-                {signUpPageConstants.address}
-              </Text>
-              <View style={styles.sectionDivider} />
-
-              <BaseTextInput
-                label={signUpPageConstants.addressLable}
-                onChangeText={handleChange('address.label')}
-                onBlur={handleBlur('address.label')}
-                value={values.address.label}
-                error={
-                  touched.address?.label && errors.address?.label
-                    ? errors.address.label
-                    : undefined
-                }
-              />
-
-              <BaseTextInput
-                label={signUpPageConstants.adderessLine1}
-                onChangeText={handleChange('address.address_line1')}
-                onBlur={handleBlur('address.address_line1')}
-                value={values.address.address_line1}
-                error={
-                  touched.address?.address_line1 &&
-                  errors.address?.address_line1
-                    ? errors.address.address_line1
-                    : undefined
-                }
-              />
-
-              <BaseTextInput
-                label={signUpPageConstants.addressLine2}
-                onChangeText={handleChange('address.address_line2')}
-                onBlur={handleBlur('address.address_line2')}
-                value={values.address.address_line2}
-                error={
-                  touched.address?.address_line2 &&
-                  errors.address?.address_line2
-                    ? errors.address.address_line2
-                    : undefined
-                }
-              />
-
-              <BaseSelect
-                label={signUpPageConstants.country}
-                options={countries}
-                selectedValue={values.address.country_id || undefined}
-                onSelect={id => {
-                  setFieldValue('address.country_id', id);
-                  setFieldValue('address.state_id', '');
-                  setFieldValue('address.city_id', '');
-                  setStates([]);
-                  setCities([]);
-                  loadStates(id as number);
-                }}
-                error={
-                  touched.address?.country_id && errors.address?.country_id
-                    ? errors.address.country_id
-                    : undefined
-                }
-              />
-
-              <BaseSelect
-                label={signUpPageConstants.state}
-                options={states}
-                selectedValue={values.address.state_id || undefined}
-                onSelect={id => {
-                  setFieldValue('address.state_id', id);
-                  setFieldValue('address.city_id', '');
-                  setCities([]);
-                  loadCities(id as number);
-                }}
-                error={
-                  touched.address?.state_id && errors.address?.state_id
-                    ? errors.address.state_id
-                    : undefined
-                }
-              />
-
-              <BaseSelect
-                label={signUpPageConstants.city}
-                options={cities}
-                selectedValue={values.address.city_id || undefined}
-                onSelect={id => setFieldValue('address.city_id', id)}
-                error={
-                  touched.address?.city_id && errors.address?.city_id
-                    ? errors.address.city_id
-                    : undefined
-                }
-              />
-
-              <BaseTextInput
-                label={signUpPageConstants.postalCode}
-                onChangeText={text => {
-                  const num = parseInt(text, 10);
-                  setFieldValue('address.postal_code', isNaN(num) ? '' : num);
-                }}
-                onBlur={handleBlur('address.postal_code')}
-                value={
-                  values.address.postal_code
-                    ? String(values.address.postal_code)
-                    : ''
-                }
-                error={
-                  touched.address?.postal_code && errors.address?.postal_code
-                    ? (errors.address.postal_code as string)
-                    : undefined
-                }
-                keyboardType="number-pad"
-              />
-              <BaseButton
-                title={signUpPageConstants.signUpTitle.toUpperCase()}
-                onPress={() => handleSubmit()}
-                containerStyle={styles.signUpButton}
-                fullWidth
-                size="lg"
-                isLoading={loading}
-              />
-              <TouchableOpacity
-                style={styles.signInRow}
-                onPress={() => navigation.navigate('LoginScreen')}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.signInText}>
-                  {signUpPageConstants.alreadyHaveAccount}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.navigate('LoginScreen')}
+          >
+            <BackIcon />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>
+            {signUpPageConstants.signUpTitle}
+          </Text>
+          <Text style={styles.subHeaderText}>
+            {signUpPageConstants.fillInDetails}
+          </Text>
+          <Formik
+            initialValues={{
+              name: '',
+              email: '',
+              password: '',
+              phone_number: '',
+              gender: '',
+              address: {
+                country_id: '',
+                state_id: '',
+                city_id: '',
+                postal_code: '',
+                label: '',
+                address_line1: '',
+                address_line2: '',
+              },
+            }}
+            validationSchema={RegisterSchema}
+            onSubmit={handleRegister}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              values,
+              errors,
+              touched,
+            }) => (
+              <View style={styles.formContainer}>
+                <Text style={styles.sectionLabel}>
+                  {signUpPageConstants.personalInformation}
                 </Text>
-                <Text style={styles.signInLink}>
-                  {forgotPasswordPageConstants.signIn}
+                <View style={styles.sectionDivider} />
+
+                <BaseTextInput
+                  label={signUpPageConstants.name}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  value={values.name}
+                  error={touched.name && errors.name ? errors.name : undefined}
+                />
+
+                <BaseTextInput
+                  label={loginPageConstants.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  error={
+                    touched.email && errors.email ? errors.email : undefined
+                  }
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+
+                <BaseTextInput
+                  label={loginPageConstants.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  error={
+                    touched.password && errors.password
+                      ? errors.password
+                      : undefined
+                  }
+                  secureTextEntry
+                />
+
+                <BaseTextInput
+                  label={signUpPageConstants.phoneNumber}
+                  onChangeText={handleChange('phone_number')}
+                  onBlur={handleBlur('phone_number')}
+                  value={values.phone_number}
+                  error={
+                    touched.phone_number && errors.phone_number
+                      ? errors.phone_number
+                      : undefined
+                  }
+                  keyboardType="phone-pad"
+                  maxLength={10}
+                />
+
+                <BaseRadio
+                  label={signUpPageConstants.gender}
+                  options={genders.map(g => ({
+                    label: g,
+                    value: g.toLowerCase(),
+                  }))}
+                  selectedValue={values.gender}
+                  onSelect={value => setFieldValue('gender', value)}
+                  error={
+                    touched.gender && errors.gender ? errors.gender : undefined
+                  }
+                />
+                <Text style={[styles.sectionLabel, { marginTop: 16 }]}>
+                  {signUpPageConstants.address}
                 </Text>
+                <View style={styles.sectionDivider} />
+
+                <BaseTextInput
+                  label={signUpPageConstants.addressLable}
+                  onChangeText={handleChange('address.label')}
+                  onBlur={handleBlur('address.label')}
+                  value={values.address.label}
+                  error={
+                    touched.address?.label && errors.address?.label
+                      ? errors.address.label
+                      : undefined
+                  }
+                />
+
+                <BaseTextInput
+                  label={signUpPageConstants.adderessLine1}
+                  onChangeText={handleChange('address.address_line1')}
+                  onBlur={handleBlur('address.address_line1')}
+                  value={values.address.address_line1}
+                  error={
+                    touched.address?.address_line1 &&
+                    errors.address?.address_line1
+                      ? errors.address.address_line1
+                      : undefined
+                  }
+                />
+
+                <BaseTextInput
+                  label={signUpPageConstants.addressLine2}
+                  onChangeText={handleChange('address.address_line2')}
+                  onBlur={handleBlur('address.address_line2')}
+                  value={values.address.address_line2}
+                  error={
+                    touched.address?.address_line2 &&
+                    errors.address?.address_line2
+                      ? errors.address.address_line2
+                      : undefined
+                  }
+                />
+
+                <BaseSelect
+                  label={signUpPageConstants.country}
+                  options={countries}
+                  selectedValue={values.address.country_id || undefined}
+                  onSelect={id => {
+                    setFieldValue('address.country_id', id);
+                    setFieldValue('address.state_id', '');
+                    setFieldValue('address.city_id', '');
+                    setStates([]);
+                    setCities([]);
+                    loadStates(id as number);
+                  }}
+                  error={
+                    touched.address?.country_id && errors.address?.country_id
+                      ? errors.address.country_id
+                      : undefined
+                  }
+                />
+
+                <BaseSelect
+                  label={signUpPageConstants.state}
+                  options={states}
+                  selectedValue={values.address.state_id || undefined}
+                  onSelect={id => {
+                    setFieldValue('address.state_id', id);
+                    setFieldValue('address.city_id', '');
+                    setCities([]);
+                    loadCities(id as number);
+                  }}
+                  error={
+                    touched.address?.state_id && errors.address?.state_id
+                      ? errors.address.state_id
+                      : undefined
+                  }
+                />
+
+                <BaseSelect
+                  label={signUpPageConstants.city}
+                  options={cities}
+                  selectedValue={values.address.city_id || undefined}
+                  onSelect={id => setFieldValue('address.city_id', id)}
+                  error={
+                    touched.address?.city_id && errors.address?.city_id
+                      ? errors.address.city_id
+                      : undefined
+                  }
+                />
+
+                <BaseTextInput
+                  label={signUpPageConstants.postalCode}
+                  onChangeText={text => {
+                    const num = parseInt(text, 10);
+                    setFieldValue('address.postal_code', isNaN(num) ? '' : num);
+                  }}
+                  onBlur={handleBlur('address.postal_code')}
+                  value={
+                    values.address.postal_code
+                      ? String(values.address.postal_code)
+                      : ''
+                  }
+                  error={
+                    touched.address?.postal_code && errors.address?.postal_code
+                      ? (errors.address.postal_code as string)
+                      : undefined
+                  }
+                  keyboardType="number-pad"
+                />
+                <BaseButton
+                  title={signUpPageConstants.signUpTitle.toUpperCase()}
+                  onPress={() => handleSubmit()}
+                  containerStyle={styles.signUpButton}
+                  fullWidth
+                  size="lg"
+                  isLoading={loading}
+                />
+                <TouchableOpacity
+                  style={styles.signInRow}
+                  onPress={() => navigation.navigate('LoginScreen')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.signInText}>
+                    {signUpPageConstants.alreadyHaveAccount}
+                  </Text>
+                  <Text style={styles.signInLink}>
+                    {forgotPasswordPageConstants.signIn}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
+          <View style={styles.orRow}>
+            <View style={styles.orLine} />
+            <Text style={styles.orText}>
+              {loginPageConstants.orContinueWith}
+            </Text>
+            <View style={styles.orLine} />
+          </View>
+
+          <View style={styles.socialContainer}>
+            <View style={styles.socialButtonsRow}>
+              <TouchableOpacity style={styles.socialButton}>
+                <GoogleIcon />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <FacebookIcon />
               </TouchableOpacity>
             </View>
-          )}
-        </Formik>
-        <View style={styles.orRow}>
-          <View style={styles.orLine} />
-          <Text style={styles.orText}>{loginPageConstants.orContinueWith}</Text>
-          <View style={styles.orLine} />
-        </View>
-
-        <View style={styles.socialContainer}>
-          <View style={styles.socialButtonsRow}>
-            <TouchableOpacity style={styles.socialButton}>
-              <GoogleIcon />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <FacebookIcon />
-            </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
