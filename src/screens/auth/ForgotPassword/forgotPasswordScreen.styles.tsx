@@ -11,7 +11,7 @@ export const forgotPasswordScreenStyles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 16,
     paddingBottom: 48,
-    paddingTop: 80,
+    paddingTop: 40,
   },
   backButton: {
     marginBottom: 24,
@@ -22,7 +22,7 @@ export const forgotPasswordScreenStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.black,
     marginBottom: 8,
-    lineHeight: 34
+    lineHeight: 40
   },
   descriptionText: {
     ...Typography.regular18,
