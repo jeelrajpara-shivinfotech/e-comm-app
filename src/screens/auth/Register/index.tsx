@@ -176,7 +176,7 @@ const Register = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('LoginScreen')}
         >
           <BackIcon />
         </TouchableOpacity>
