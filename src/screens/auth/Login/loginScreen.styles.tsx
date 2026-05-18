@@ -1,64 +1,92 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme';
 import Typography from '../../../theme/fonts';
 
-const { width } = Dimensions.get('window');
-
 export const loginScreenStyles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    padding: 16,
-    paddingVertical: 60,
+    backgroundColor: colors.lightGray,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 48,
+    paddingTop: 40,
   },
   backButton: {
-    marginBottom: 40,
+    marginBottom: 24,
   },
   headerText: {
     ...Typography.regular34,
     fontWeight: 'bold',
     color: colors.black,
-    marginBottom: 60,
+    marginBottom: 4,
+  },
+  subHeaderText: {
+    ...Typography.regular16,
+    color: colors.black,
+    marginBottom: 32,
+    fontWeight: 400
   },
   formContainer: {
     width: '100%',
-  },
-  inputContainer: {
-    marginBottom: 8,
   },
   forgotPasswordContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 32,
   },
   forgotPasswordText: {
-    ...Typography.regular18,
-    color: colors.black,
+    ...Typography.regular16,
+    color: colors.red,
+    fontWeight: '500',
     marginRight: 4,
-    fontWeight: 500
   },
   loginButton: {
-    marginTop: 32,
+    marginTop: 24,
     shadowColor: colors.red,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
     elevation: 8,
   },
-  socialContainer: {
-    marginTop: 'auto',
+  signUpRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 40,
+    marginTop: 16,
+    marginBottom: 8,
   },
-  socialText: {
-    ...Typography.regular18,
+  signUpText: {
+    ...Typography.regular16,
     color: colors.black,
-    marginBottom: 12,
-    fontWeight: 500
+    marginRight: 4,
+  },
+  signUpLink: {
+    ...Typography.regular16,
+    color: colors.red,
+    fontWeight: '700',
+  },
+  orRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 28,
+    marginBottom: 20,
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.black,
+    opacity: 0.1
+  },
+  orText: {
+    ...Typography.regular14,
+    color: colors.gray,
+    marginHorizontal: 12,
+  },
+  socialContainer: {
+    alignItems: 'center',
   },
   socialButtonsRow: {
     flexDirection: 'row',
@@ -68,17 +96,14 @@ export const loginScreenStyles = StyleSheet.create({
   socialButton: {
     backgroundColor: colors.white,
     width: 92,
-    height: 64,
-    borderRadius: 24,
+    height: 56,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
   },
 });
