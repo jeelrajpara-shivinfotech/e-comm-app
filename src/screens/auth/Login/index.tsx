@@ -67,7 +67,7 @@ const Login = () => {
       if (token) {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'BottomTabs' }],
+          routes: [{ name: 'Main' }],
         });
       }
     };
@@ -88,7 +88,7 @@ const Login = () => {
         AsyncStorage.setItem('authToken', response.data.token);
         navigation.reset({
           index: 0,
-          routes: [{ name: 'BottomTabs' }],
+          routes: [{ name: 'Main' }],
         });
       }
     });
