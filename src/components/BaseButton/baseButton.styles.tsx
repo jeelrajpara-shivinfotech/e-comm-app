@@ -79,16 +79,16 @@ export const baseButtonStyles = StyleSheet.create({
   },
   // Text Sizes
   textXs: {
-    fontSize: 12,
+    ...Typography.regular12
   },
   textSm: {
-    fontSize: 14,
+    ...Typography.regular14,
   },
   textMd: {
-    fontSize: 16,
+    ...Typography.regular16,
   },
   textLg: {
-    fontSize: 18,
+    ...Typography.regular18,
   },
   // Helpers
   fullWidth: {

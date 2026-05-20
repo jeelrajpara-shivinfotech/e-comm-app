@@ -43,7 +43,7 @@ export const baseSelectStyles = StyleSheet.create({
     padding: 0,
   },
   placeholderStyle: {
-    fontSize: 14,
+    ...Typography.regular14,
     color: colors.black,
     opacity: 0.4
   },
@@ -57,7 +57,7 @@ export const baseSelectStyles = StyleSheet.create({
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 14,
+    ...Typography.regular14,
   },
   errorText: { 
     ...Typography.regular14,
