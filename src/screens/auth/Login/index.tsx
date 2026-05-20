@@ -17,7 +17,7 @@ import BaseButton from '../../../components/BaseButton';
 import GoogleIcon from '../../../assets/svg/GoogleIcon';
 import FacebookIcon from '../../../assets/svg/FacebookIcon';
 import { emailRegex } from '../../../utils/regex';
-import { loginPageConstants } from '../../../constants/AuthPageConstants';
+import { loginPageConstants, signUpPageConstants } from '../../../constants/AuthPageConstants';
 import { RequiredField } from '../../../utils/validationMessages';
 import { useNavigation } from '@react-navigation/native';
 import BackIcon from '../../../assets/svg/BackIcon';
@@ -177,7 +177,7 @@ const Login = () => {
                   <Text style={styles.signUpText}>
                     {loginPageConstants.noAccount}
                   </Text>
-                  <Text style={styles.signUpLink}>Sign Up</Text>
+                  <Text style={styles.signUpLink}>{signUpPageConstants.signUpTitle}</Text>
                 </TouchableOpacity>
               </View>
             )}
