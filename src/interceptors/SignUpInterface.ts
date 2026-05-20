@@ -1,3 +1,4 @@
+import { CommonResponse } from './CommonInterface';
 export interface SignupPayload {
   name: string;
   email: string;
@@ -15,12 +16,7 @@ export interface SignupPayload {
   };
 }
 
-export interface SignupResponse {
-  statusCode: number;
-  status: string;
-  message: string;
-  data: SignupResponseData;
-}
+export interface SignupResponse extends CommonResponse<SignupResponseData> {}
 
 export interface SignupResponseData {
   id: string;

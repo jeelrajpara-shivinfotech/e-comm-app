@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme';
+import Typography from '../../theme/fonts';
 
 export const baseRadioStyles = StyleSheet.create({
   container: { marginBottom: 16, width: '100%' },
-  label: { marginBottom: 8, fontSize: 14, color: colors.black },
+  label: { marginBottom: 8, ...Typography.regular14, color: colors.black },
   radioGroup: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
   radioButtonContainer: {
     flexDirection: 'row',
@@ -27,6 +28,6 @@ export const baseRadioStyles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.red,
   },
-  radioLabel: { fontSize: 14, color: colors.black },
-  errorText: { color: colors.dangerRed, fontSize: 12, marginTop: 4 },
+  radioLabel: { ...Typography.regular14, color: colors.black },
+  errorText: { color: colors.dangerRed, ...Typography.regular12, marginTop: 4 },
 });
