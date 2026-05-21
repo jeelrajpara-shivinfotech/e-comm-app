@@ -1,3 +1,4 @@
+import { CommonResponse, PaginatedList } from './CommonInterface';
 export interface ProductListPayload {
   page?: number;
   pageSize?: number;
@@ -30,16 +31,4 @@ export interface Product {
   variants: Variant[];
 }
 
-export interface ProductListResponse {
-  statusCode: number;
-  status: string;
-  message: string;
-  data: {
-    products: Product[];
-    totalItems: number;
-    totalPage: number;
-    currentPage: number;
-    pageSize: number;
-    numberOfRows: number;
-  };
-}
+export interface ProductListResponse extends CommonResponse<PaginatedList<Product, 'products'>> {}
