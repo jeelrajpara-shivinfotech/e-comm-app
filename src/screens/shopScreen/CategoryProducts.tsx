@@ -114,7 +114,6 @@ const CategoryProducts = () => {
     };
 
     const apiCall = getCategoryProductsApi(payload);
-    console.log(payload);
     await handleApiResponse(
       apiCall,
       (response: CategoryProductsResponse) => {
