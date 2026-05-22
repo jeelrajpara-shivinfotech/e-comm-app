@@ -6,12 +6,10 @@ import {
   Product,
   ProductListResponse,
 } from '../../interceptors/ProductInterface';
-import { handleApiResponse } from '../../utils/commonFunctions';
+import { handleApiResponse, SafeImage } from '../../utils/commonFunctions';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
-  Image,
   ImageBackground,
   ScrollView,
   Text,
@@ -21,29 +19,6 @@ import {
 import { useEffect, useState } from 'react';
 import { BASE_IMAGE_URL } from '@env';
 import { homePageConstants } from '../../constants/HomePageConstants';
-
-const ProductImage = ({ uri }: { uri: string }) => {
-  const [imgUri, setImgUri] = useState(uri);
-  const fallbackUri =
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300';
-
-  useEffect(() => {
-    setImgUri(uri);
-  }, [uri]);
-
-  return (
-    <Image
-      source={{ uri: imgUri }}
-      style={homeScreenStyles.productImage}
-      resizeMode="cover"
-      onError={() => {
-        if (imgUri !== fallbackUri) {
-          setImgUri(fallbackUri);
-        }
-      }}
-    />
-  );
-};
 
 const HomeScreen = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -80,9 +55,6 @@ const HomeScreen = () => {
   const renderProductItem = ({ item }: { item: Product }) => {
     const variant = item.variants?.[0];
     const imagePath = variant?.image?.image_path;
-    const imageUrl = imagePath
-      ? `${BASE_IMAGE_URL}/${imagePath}`
-      : 'https://via.placeholder.com/150';
 
     return (
       <TouchableOpacity
@@ -90,7 +62,7 @@ const HomeScreen = () => {
         activeOpacity={0.8}
       >
         <View style={homeScreenStyles.productImageContainer}>
-          <ProductImage uri={imageUrl} />
+          <SafeImage uri={`${BASE_IMAGE_URL}/${imagePath}`} style={homeScreenStyles.productImage} resizeMode="cover" />
           <View style={homeScreenStyles.newBadge}>
             <Text style={homeScreenStyles.newBadgeText}>
               {homePageConstants.new}
