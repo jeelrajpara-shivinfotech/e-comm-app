@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 export type AuthStackParamList = {
   RegisterScreen: undefined;
   LoginScreen: undefined;
@@ -6,7 +8,7 @@ export type AuthStackParamList = {
 
 export type BottomTabParamList = {
   HomeScreen: undefined;
-  ShopScreen: undefined;
+  ShopScreen: NavigatorScreenParams<ShopStackParamList>;
   BagScreen: undefined;
   FavScreen: undefined;
   ProfileScreen: undefined;
@@ -18,11 +20,37 @@ export type ShopStackParamList = {
     categoryId: number;
     categoryName: string;
     gender: string;
+    appliedFilters?: {
+      priceRange?: [number, number];
+      colors?: string[];
+      sizes?: string[];
+      categories?: string[];
+      brands?: string[];
+    };
   };
 };
 
 export type MainStackParamList = {
-  BottomTab: undefined;
+  BottomTab: NavigatorScreenParams<BottomTabParamList>;
+  FiltersScreen: {
+    categoryId: number;
+    categoryName: string;
+    gender: string;
+    currentFilters?: {
+      priceRange: [number, number];
+      colors: string[];
+      sizes: string[];
+      categories: string[];
+      brands: string[];
+    };
+  };
+  BrandScreen: {
+    selectedBrands: string[];
+    onApplyBrands: (brands: string[]) => void;
+    categoryId: number;
+    categoryName: string;
+    gender: string;
+  };
 };
 
 export type RootStackParamList = {
