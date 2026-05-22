@@ -122,6 +122,7 @@ export const shopStyles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     overflow: 'hidden',
+    marginHorizontal: 16,
   },
   categoryTextContainer: {
     flex: 1,
