@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { baseBottomDrawerStyles as styles } from './baseBottomDrawer.styles';
 import { colors } from '../../theme';
@@ -21,9 +22,10 @@ interface BaseBottomDrawerProps<T = any> {
   visible: boolean;
   onClose: () => void;
   title: string;
-  options: BottomDrawerOption<T>[];
-  selectedValue: T;
-  onSelect: (option: BottomDrawerOption<T>) => void;
+  options?: BottomDrawerOption<T>[];
+  selectedValue?: T;
+  onSelect?: (option: BottomDrawerOption<T>) => void;
+  children?: React.ReactNode;
 }
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -32,9 +34,10 @@ const BaseBottomDrawer = <T extends any>({
   visible,
   onClose,
   title,
-  options,
+  options = [],
   selectedValue,
   onSelect,
+  children,
 }: BaseBottomDrawerProps<T>) => {
   const [showModal, setShowModal] = useState(visible);
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -70,7 +73,9 @@ const BaseBottomDrawer = <T extends any>({
   };
 
   const handleSelect = (option: BottomDrawerOption<T>) => {
-    onSelect(option);
+    if (onSelect) {
+      onSelect(option);
+    }
     handleClose();
   };
 
@@ -90,8 +95,16 @@ const BaseBottomDrawer = <T extends any>({
       visible={showModal}
       animationType="none"
       onRequestClose={handleClose}
+      statusBarTranslucent={true}
     >
       <View style={styles.overlay}>
+        {showModal && (
+          <StatusBar
+            backgroundColor={colors.black}
+            barStyle="light-content"
+            translucent={true}
+          />
+        )}
         <TouchableWithoutFeedback onPress={handleClose}>
           <Animated.View
             style={[
@@ -115,31 +128,35 @@ const BaseBottomDrawer = <T extends any>({
           <View style={styles.handle} />
           <Text style={styles.title}>{title}</Text>
 
-          <ScrollView style={styles.optionsList} bounces={false}>
-            {options.map(option => {
-              const isSelected = option.id === selectedValue;
-              return (
-                <TouchableOpacity
-                  key={String(option.id)}
-                  style={[
-                    styles.optionRow,
-                    isSelected && styles.selectedOptionRow,
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() => handleSelect(option)}
-                >
-                  <Text
+          {children ? (
+            children
+          ) : (
+            <ScrollView style={styles.optionsList} bounces={false}>
+              {options.map(option => {
+                const isSelected = option.id === selectedValue;
+                return (
+                  <TouchableOpacity
+                    key={String(option.id)}
                     style={[
-                      styles.optionText,
-                      isSelected && styles.selectedOptionText,
+                      styles.optionRow,
+                      isSelected && styles.selectedOptionRow,
                     ]}
+                    activeOpacity={0.7}
+                    onPress={() => handleSelect(option)}
                   >
-                    {option.label}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+                    <Text
+                      style={[
+                        styles.optionText,
+                        isSelected && styles.selectedOptionText,
+                      ]}
+                    >
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          )}
         </Animated.View>
       </View>
     </Modal>
