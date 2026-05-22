@@ -1,6 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/homeScreen';
+import ShopScreen from '../screens/shopScreen';
+import CategoryProducts from '../screens/shopScreen/CategoryProducts';
 import { BottomTabParamList, ShopStackParamList } from '../interface/navigationProps';
 import { colors } from '../theme';
 import Typography from '../theme/fonts';
@@ -11,6 +14,16 @@ import FavIcon from '../assets/svg/FavIcon';
 import UserIcon from '../assets/svg/UserIcon';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
+const ShopStack = createNativeStackNavigator<ShopStackParamList>();
+
+const ShopStackNavigator = () => {
+  return (
+    <ShopStack.Navigator screenOptions={{ headerShown: false }}>
+      <ShopStack.Screen name="ShopIndex" component={ShopScreen} />
+      <ShopStack.Screen name="CategoryProducts" component={CategoryProducts} />
+    </ShopStack.Navigator>
+  );
+};
 
 const BottomTabsNavigation = () => {
   return (
@@ -62,6 +75,11 @@ const BottomTabsNavigation = () => {
           name="HomeScreen"
           component={HomeScreen}
           options={{ tabBarLabel: 'Home' }}
+        />
+        <Tab.Screen
+          name="ShopScreen"
+          component={ShopStackNavigator}
+          options={{ tabBarLabel: 'Shop' }}
         />
       </Tab.Group>
     </Tab.Navigator>
