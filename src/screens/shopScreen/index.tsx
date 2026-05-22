@@ -15,15 +15,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../theme';
 import { shopStyles as styles } from './shopScreen.styles';
 import { getCategoryListApi } from '../../api/categoryApi';
-import { handleApiResponse } from '../../utils/commonFunctions';
+import { handleApiResponse, SafeImage } from '../../utils/commonFunctions';
 import {
   Category,
   CategoryResponse,
 } from '../../interceptors/CategoryInterface';
 import { BASE_IMAGE_URL } from '@env';
 import BackIcon from '../../assets/svg/BackIcon';
-import { SearchIcon } from '../../assets/svg/SearchIcon';
 import { shopPageConstants } from '../../constants/ShopPageConstants';
+import { SearchIcon } from '../../assets/svg/SearchIcon';
 
 const ShopScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -69,9 +69,6 @@ const ShopScreen = () => {
 
   const renderCategoryItem = ({ item }: { item: Category }) => {
     const imagePath = item.category_image;
-    let fallbackUrl =
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400';
-    const imageUrl = imagePath ? `${BASE_IMAGE_URL}/${imagePath}` : fallbackUrl;
 
     return (
       <TouchableOpacity
@@ -88,8 +85,8 @@ const ShopScreen = () => {
         <View style={styles.categoryTextContainer}>
           <Text style={styles.categoryTitle}>{item?.category_name}</Text>
         </View>
-        <Image
-          source={{ uri: imageUrl }}
+        <SafeImage
+          uri={`${BASE_IMAGE_URL}/${imagePath}`}
           style={styles.categoryImage}
           resizeMode="cover"
         />

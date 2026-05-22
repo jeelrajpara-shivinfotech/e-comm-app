@@ -16,7 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../theme';
 import { shopStyles as styles } from './shopScreen.styles';
 import { getCategoryProductsApi } from '../../api/categoryApi';
-import { handleApiResponse } from '../../utils/commonFunctions';
+import { handleApiResponse, SafeImage } from '../../utils/commonFunctions';
 import {
   CategoryProductsResponse,
   CategoryProduct,
@@ -115,7 +115,6 @@ const CategoryProducts = () => {
     };
 
     const apiCall = getCategoryProductsApi(payload);
-    console.log(payload);
     await handleApiResponse(
       apiCall,
       (response: CategoryProductsResponse) => {
@@ -194,11 +193,6 @@ const CategoryProducts = () => {
   }) => {
     const variant = item.variants?.[0];
     const imagePath = variant?.image?.image_path;
-    const imageUrl = imagePath
-      ? imagePath.startsWith('http://') || imagePath.startsWith('https://')
-        ? imagePath
-        : `${BASE_IMAGE_URL}/${imagePath}`
-      : 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300';
     const isFavorite = favoriteProductIds.has(item.id);
     const rating = (index % 3) + 3;
     const ratingCount = index * 4 + 3;
@@ -207,8 +201,8 @@ const CategoryProducts = () => {
       return (
         <TouchableOpacity style={styles.gridProductCard} activeOpacity={0.9}>
           <View style={styles.gridProductImageContainer}>
-            <Image
-              source={{ uri: imageUrl }}
+            <SafeImage
+              uri={`${BASE_IMAGE_URL}/${imagePath}`}
               style={styles.gridProductImage}
               resizeMode="cover"
             />
@@ -245,8 +239,8 @@ const CategoryProducts = () => {
 
     return (
       <TouchableOpacity style={styles.listProductCard} activeOpacity={0.9}>
-        <Image
-          source={{ uri: imageUrl }}
+        <SafeImage
+          uri={`${BASE_IMAGE_URL}/${imagePath}`}
           style={styles.listProductImage}
           resizeMode="cover"
         />
