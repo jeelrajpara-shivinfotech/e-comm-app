@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-
+import { navigationRoutes } from '../constants/ShopPageConstants';
 export type AuthStackParamList = {
   RegisterScreen: undefined;
   LoginScreen: undefined;
@@ -50,6 +50,9 @@ export type MainStackParamList = {
     categoryId: number;
     categoryName: string;
     gender: string;
+  };
+  [navigationRoutes.productCardScreen]: {
+    productId: number;
   };
 };
 

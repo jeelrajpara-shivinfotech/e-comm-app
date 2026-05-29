@@ -34,6 +34,7 @@ import { StarIcon } from '../../assets/svg/StarIcon';
 import {
   categoryProducts,
   shopPageConstants,
+  navigationRoutes,
 } from '../../constants/ShopPageConstants';
 import { homePageConstants } from '../../constants/HomePageConstants';
 
@@ -199,7 +200,11 @@ const CategoryProducts = () => {
 
     if (isGridView) {
       return (
-        <TouchableOpacity style={styles.gridProductCard} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.gridProductCard}
+          activeOpacity={0.9}
+          onPress={() => navigation.navigate(navigationRoutes.productCardScreen, { productId: item.id })}
+        >
           <View style={styles.gridProductImageContainer}>
             <SafeImage
               uri={`${BASE_IMAGE_URL}/${imagePath}`}
@@ -238,7 +243,11 @@ const CategoryProducts = () => {
     }
 
     return (
-      <TouchableOpacity style={styles.listProductCard} activeOpacity={0.9}>
+      <TouchableOpacity
+        style={styles.listProductCard}
+        activeOpacity={0.9}
+        onPress={() => navigation.navigate(navigationRoutes.productCardScreen, { productId: item.id })}
+      >
         <SafeImage
           uri={`${BASE_IMAGE_URL}/${imagePath}`}
           style={styles.listProductImage}
