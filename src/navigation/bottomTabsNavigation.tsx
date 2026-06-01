@@ -12,6 +12,7 @@ import ShopIcon from '../assets/svg/ShopIcon';
 import BagIcon from '../assets/svg/BagIcon';
 import FavIcon from '../assets/svg/FavIcon';
 import UserIcon from '../assets/svg/UserIcon';
+import FavScreen from '../screens/favScreen';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const ShopStack = createNativeStackNavigator<ShopStackParamList>();
@@ -80,6 +81,11 @@ const BottomTabsNavigation = () => {
           name="ShopScreen"
           component={ShopStackNavigator}
           options={{ tabBarLabel: 'Shop' }}
+        />
+        <Tab.Screen
+          name="FavScreen"
+          component={FavScreen}
+          options={{ tabBarLabel: 'Favourites' }}
         />
       </Tab.Group>
     </Tab.Navigator>

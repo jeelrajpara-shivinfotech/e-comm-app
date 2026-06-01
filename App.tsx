@@ -7,13 +7,16 @@ import {
 import Navigation from './src/navigation';
 import { colors } from './src/theme';
 import Toast from 'react-native-toast-message';
+import { WishlistProvider } from './src/context/WishlistContext';
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Navigation/>
+      <WishlistProvider>
+          <Navigation/>
+      </WishlistProvider>
       <Toast />
     </SafeAreaProvider>
   );

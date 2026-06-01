@@ -105,5 +105,6 @@ export const productViewConstants = {
     addToCart : "Add to cart",
     selectColor : "Select color",
     selectSize : "Select size",
-    reviewCount : "(10)"
+    reviewCount : "(10)",
+    addToWishlist : "ADD TO WISHLIST"
 }

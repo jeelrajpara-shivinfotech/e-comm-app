@@ -39,6 +39,8 @@ import ChevronRightIcon from '../../assets/svg/ChevronRightIcon';
 import ShareIcon from '../../assets/svg/ShareIcon';
 import ChevronDown from '../../assets/svg/ChevronDown';
 import { homePageConstants } from '../../constants/HomePageConstants';
+import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../context/CartContext';
 
 const ProductScreen = () => {
   const navigation =
@@ -50,7 +52,10 @@ const ProductScreen = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeVariant, setActiveVariant] = useState<Variant | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('S');
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const { isProductFavorited, getWishlistItemId, addToWishlist, removeFromWishlist } = useWishlist();
+  const { addToCart: addCartItem } = useCart();
+  const variantIds = product?.variants?.map(v => v.id) || [];
+  const isFavorite = product ? isProductFavorited(product.id, variantIds) : false;
   const [loading, setLoading] = useState<boolean>(true);
   const [isSizeDrawerVisible, setIsSizeDrawerVisible] =
     useState<boolean>(false);
@@ -138,6 +143,32 @@ const ProductScreen = () => {
       }
     }
     setIsColorDrawerVisible(false);
+  };
+
+  const handleFavoritePress = async () => {
+    if (!product) return;
+    const variantIds = product.variants?.map(v => v.id) || [];
+    const isFav = isProductFavorited(product.id, variantIds);
+    if (isFav) {
+      const wishlistId = getWishlistItemId(product.id, variantIds);
+      if (wishlistId !== null) {
+        await removeFromWishlist(wishlistId);
+      }
+    } else {
+      if (activeVariant) {
+        await addToWishlist(activeVariant.id);
+      } else {
+        setIsSizeDrawerVisible(true);
+      }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!product || !activeVariant) return;
+    const success = await addCartItem(product.id, activeVariant.id, 1);
+    if (success) {
+      setIsSizeDrawerVisible(false);
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -254,7 +285,7 @@ const ProductScreen = () => {
           <TouchableOpacity
             style={styles.favoriteButton}
             activeOpacity={0.8}
-            onPress={() => setIsFavorite(!isFavorite)}
+            onPress={handleFavoritePress}
           >
             <FavIcon
               width={18}
@@ -419,6 +450,7 @@ const ProductScreen = () => {
             variant="primary"
             fullWidth
             containerStyle={styles.addToCartButton}
+            onPress={handleAddToCart}
           />
         </View>
       </BaseBottomDrawer>

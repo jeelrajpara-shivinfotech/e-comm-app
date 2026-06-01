@@ -348,6 +348,42 @@ export const shopStyles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 2,
   },
+  sizeDrawerContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 24,
+    backgroundColor: colors.white,
+  },
+  sizeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginBottom: 24,
+    justifyContent: 'flex-start',
+  },
+  sizeGridItem: {
+    width: '30%',
+    height: 40,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.gray,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+  sizeGridItemActive: {
+    borderColor: colors.black,
+    borderWidth: 1.5,
+  },
+  sizeGridText: {
+    ...Typography.regular14,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  sizeGridTextActive: {
+    color: colors.black,
+    fontWeight: '700',
+  },
 });
 
 export const filterStyles = StyleSheet.create({

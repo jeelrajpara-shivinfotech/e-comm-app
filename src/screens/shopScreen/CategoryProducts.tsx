@@ -35,8 +35,12 @@ import {
   categoryProducts,
   shopPageConstants,
   navigationRoutes,
+  productViewConstants,
 } from '../../constants/ShopPageConstants';
 import { homePageConstants } from '../../constants/HomePageConstants';
+import { useWishlist } from '../../context/WishlistContext';
+import BaseButton from '../../components/BaseButton';
+import { sizesConsts } from '../../constants/FavPageConstants';
 
 const CategoryProducts = () => {
   const route = useRoute<any>();
@@ -62,6 +66,10 @@ const CategoryProducts = () => {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const { isProductFavorited, getWishlistItemId, addToWishlist, removeFromWishlist } = useWishlist();
+  const [selectedProductForSize, setSelectedProductForSize] = useState<CategoryProduct | null>(null);
+  const [isWishlistSizeDrawerVisible, setIsWishlistSizeDrawerVisible] = useState(false);
+  const [wishlistSelectedSize, setWishlistSelectedSize] = useState('S');
 
   const subcategoryTags = [
     categoryProducts.all,
@@ -79,6 +87,38 @@ const CategoryProducts = () => {
     { id: 'price_asc', label: categoryProducts.priceLow },
     { id: 'price_desc', label: categoryProducts.priceHigh },
   ];
+
+  const handleFavoritePress = async (product: CategoryProduct) => {
+    const variantIds = product.variants?.map(v => v.id) || [];
+    const isFav = isProductFavorited(product.id, variantIds);
+    if (isFav) {
+      const wishlistId = getWishlistItemId(product.id, variantIds);
+      if (wishlistId !== null) {
+        await removeFromWishlist(wishlistId);
+      }
+    } else {
+      setSelectedProductForSize(product);
+      const sizes = Array.from(new Set(product.variants?.map(v => v.size).filter(Boolean))) || [];
+      if (sizes.length > 0) {
+        setWishlistSelectedSize(sizes[0]);
+      } else {
+        setWishlistSelectedSize('S');
+      }
+      setIsWishlistSizeDrawerVisible(true);
+    }
+  };
+
+  const handleAddWishlistWithSize = async () => {
+    if (!selectedProductForSize) return;
+    const variant = selectedProductForSize.variants?.find(
+      v => v.size?.toLowerCase() === wishlistSelectedSize.toLowerCase()
+    ) || selectedProductForSize.variants?.[0];
+
+    if (variant) {
+      setIsWishlistSizeDrawerVisible(false);
+      await addToWishlist(variant.id);
+    }
+  };
 
   useEffect(() => {
     fetchProducts(searchQuery);
@@ -194,7 +234,8 @@ const CategoryProducts = () => {
   }) => {
     const variant = item.variants?.[0];
     const imagePath = variant?.image?.image_path;
-    const isFavorite = favoriteProductIds.has(item.id);
+    const variantIds = item.variants?.map(v => v.id) || [];
+    const isFavorite = isProductFavorited(item.id, variantIds);
     const rating = (index % 3) + 3;
     const ratingCount = index * 4 + 3;
 
@@ -230,6 +271,7 @@ const CategoryProducts = () => {
           <TouchableOpacity
             style={styles.gridFavoriteButton}
             activeOpacity={0.8}
+            onPress={() => handleFavoritePress(item)}
           >
             <FavIcon
               width={18}
@@ -270,7 +312,11 @@ const CategoryProducts = () => {
             style={styles.listProductPrice}
           >{`${variant?.price}${homePageConstants.dollarSign}`}</Text>
         </View>
-        <TouchableOpacity style={styles.favoriteButton} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.favoriteButton}
+          activeOpacity={0.8}
+          onPress={() => handleFavoritePress(item)}
+        >
           <FavIcon
             width={18}
             height={18}
@@ -444,6 +490,52 @@ const CategoryProducts = () => {
           setSelectedSort(option.id);
         }}
       />
+      <BaseBottomDrawer
+        visible={isWishlistSizeDrawerVisible}
+        onClose={() => setIsWishlistSizeDrawerVisible(false)}
+        title={productViewConstants.selectSize}
+      >
+        <View style={styles.sizeDrawerContainer}>
+          <View style={styles.sizeGrid}>
+            {sizesConsts.map(size => {
+              const isActive = wishlistSelectedSize === size;
+              const isAvailable = selectedProductForSize?.variants?.some(
+                v => v.size?.toLowerCase() === size.toLowerCase()
+              );
+              return (
+                <TouchableOpacity
+                  key={size}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.sizeGridItem,
+                    isActive && styles.sizeGridItemActive,
+                    !isAvailable && { opacity: 0.4 }
+                  ]}
+                  onPress={() => {
+                    setWishlistSelectedSize(size);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.sizeGridText,
+                      isActive && styles.sizeGridTextActive,
+                    ]}
+                  >
+                    {size}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <BaseButton
+            title={productViewConstants.addToWishlist}
+            variant="primary"
+            fullWidth
+            onPress={handleAddWishlistWithSize}
+            containerStyle={{ marginTop: 24, marginBottom: 12 }}
+          />
+        </View>
+      </BaseBottomDrawer>
     </SafeAreaView>
   );
 };
