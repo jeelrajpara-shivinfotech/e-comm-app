@@ -4,5 +4,6 @@ export const colors = {
     lightGray : "rgba(249, 249, 249, 1)",
     black : "rgba(34, 34, 34, 1)",
     dangerRed : "rgba(240, 31, 14, 1)",
-    green : "rgba(42, 169, 82, 1)"
+    green : "rgba(42, 169, 82, 1)",
+    gray : "rgb(155, 155, 155)"
 }
