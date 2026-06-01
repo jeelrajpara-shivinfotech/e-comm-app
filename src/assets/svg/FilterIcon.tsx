@@ -2,8 +2,8 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 
 export const FilterIcon = (props: SvgProps) => (
   <Svg
-    width={18}
-    height={12}
+    width={props.width || 18}
+    height={props.height || 12}
     viewBox="0 0 18 12"
     fill="none"
     {...props}
