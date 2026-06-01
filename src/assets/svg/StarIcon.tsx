@@ -1,9 +1,9 @@
-import Svg, { Path } from "react-native-svg";
+import Svg, { Path, SvgProps } from "react-native-svg";
 
-export const StarIcon = ({ filled }: { filled: boolean }) => (
+export const StarIcon = ({ filled }: { filled: boolean } , props : SvgProps) => (
   <Svg
-    width={14}
-    height={14}
+    width={props.width || 14}
+    height={props.height || 14}
     viewBox="0 0 24 24"
     fill={filled ? '#FFC107' : 'none'}
   >

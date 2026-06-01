@@ -2,7 +2,7 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 import { colors } from '../../theme';
 
 export const GridIcon = (props: SvgProps) => (
-  <Svg width={16} height={12} viewBox="0 0 16 12" fill="none" {...props}>
+  <Svg width={props.width || 16} height={props.height||12} viewBox="0 0 16 12" fill="none" {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

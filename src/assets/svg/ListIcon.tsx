@@ -3,8 +3,8 @@ import { colors } from "../../theme";
 
 export const ListIcon = (props: SvgProps) => (
   <Svg
-    width={17}
-    height={14}
+    width={props.width || 17}
+    height={props.height || 14}
     viewBox="0 0 17 14"
     fill="none"
     {...props}
