@@ -6,3 +6,4 @@ export const CITY_LIST = "/listOfCity/";
 export const PRODUCT_LIST = "/products/listOfProducts";
 export const CATEGORY_LIST = "/category/listOfCategories";
 export const CATEGORY_OF_PRODUCTS = "/category/categoryOfProducts";
+export const VIEW_PRODUCT = "/products/viewProduct/";

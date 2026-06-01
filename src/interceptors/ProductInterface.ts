@@ -32,3 +32,13 @@ export interface Product {
 }
 
 export interface ProductListResponse extends CommonResponse<PaginatedList<Product, 'products'>> {}
+export interface ProductDetailResponse {
+  statusCode: number;
+  status: string;
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    variants: Variant[];
+  };
+}

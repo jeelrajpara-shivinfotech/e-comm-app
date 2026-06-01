@@ -24,6 +24,7 @@ import {
 import { BASE_IMAGE_URL } from '@env';
 import BackIcon from '../../assets/svg/BackIcon';
 import FavIcon from '../../assets/svg/FavIcon';
+import BaseBottomDrawer from '../../components/BaseBottomDrawer';
 import { SearchIcon } from '../../assets/svg/SearchIcon';
 import { FilterIcon } from '../../assets/svg/FilterIcon';
 import { GridIcon } from '../../assets/svg/GridIcon';
@@ -33,6 +34,7 @@ import { StarIcon } from '../../assets/svg/StarIcon';
 import {
   categoryProducts,
   shopPageConstants,
+  navigationRoutes,
 } from '../../constants/ShopPageConstants';
 import { homePageConstants } from '../../constants/HomePageConstants';
 
@@ -198,7 +200,11 @@ const CategoryProducts = () => {
 
     if (isGridView) {
       return (
-        <TouchableOpacity style={styles.gridProductCard} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.gridProductCard}
+          activeOpacity={0.9}
+          onPress={() => navigation.navigate(navigationRoutes.productCardScreen, { productId: item.id })}
+        >
           <View style={styles.gridProductImageContainer}>
             <SafeImage
               uri={`${BASE_IMAGE_URL}/${imagePath}`}
@@ -237,7 +243,11 @@ const CategoryProducts = () => {
     }
 
     return (
-      <TouchableOpacity style={styles.listProductCard} activeOpacity={0.9}>
+      <TouchableOpacity
+        style={styles.listProductCard}
+        activeOpacity={0.9}
+        onPress={() => navigation.navigate(navigationRoutes.productCardScreen, { productId: item.id })}
+      >
         <SafeImage
           uri={`${BASE_IMAGE_URL}/${imagePath}`}
           style={styles.listProductImage}
@@ -424,6 +434,16 @@ const CategoryProducts = () => {
           }
         />
       )}
+      <BaseBottomDrawer
+        visible={isSortDrawerVisible}
+        onClose={() => setIsSortDrawerVisible(false)}
+        title={categoryProducts.sortBy}
+        options={sortOptions}
+        selectedValue={selectedSort}
+        onSelect={option => {
+          setSelectedSort(option.id);
+        }}
+      />
     </SafeAreaView>
   );
 };
