@@ -12,6 +12,7 @@ import ShopIcon from '../assets/svg/ShopIcon';
 import BagIcon from '../assets/svg/BagIcon';
 import FavIcon from '../assets/svg/FavIcon';
 import UserIcon from '../assets/svg/UserIcon';
+import BagScreen from '../screens/bagScreen';
 import FavScreen from '../screens/favScreen';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -52,7 +53,7 @@ const BottomTabsNavigation = () => {
             paddingBottom: 8,
             paddingTop: 10,
             elevation: 5,
-            paddingHorizontal : 10
+            paddingHorizontal: 10
           },
           tabBarIcon: ({ focused }) => {
             const stroke = focused ? colors.red : colors.gray;
@@ -81,6 +82,11 @@ const BottomTabsNavigation = () => {
           name="ShopScreen"
           component={ShopStackNavigator}
           options={{ tabBarLabel: 'Shop' }}
+        />
+        <Tab.Screen
+          name="BagScreen"
+          component={BagScreen}
+          options={{ tabBarLabel: 'Bag' }}
         />
         <Tab.Screen
           name="FavScreen"

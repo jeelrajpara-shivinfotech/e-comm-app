@@ -8,6 +8,7 @@ import Navigation from './src/navigation';
 import { colors } from './src/theme';
 import Toast from 'react-native-toast-message';
 import { WishlistProvider } from './src/context/WishlistContext';
+import { CartProvider } from './src/context/CartContext';
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -15,7 +16,9 @@ function App() {
     <SafeAreaProvider style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <WishlistProvider>
-          <Navigation/>
+        <CartProvider>
+          <Navigation />
+        </CartProvider>
       </WishlistProvider>
       <Toast />
     </SafeAreaProvider>
