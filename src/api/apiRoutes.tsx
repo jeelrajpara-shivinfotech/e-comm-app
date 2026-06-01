@@ -3,3 +3,6 @@ export const SIGNUP = "/user/registration";
 export const COUNTRY_LIST = "/listOfCountry";
 export const STATE_LIST = "/listOfState/";
 export const CITY_LIST = "/listOfCity/";
+export const PRODUCT_LIST = "/products/listOfProducts";
+export const CATEGORY_LIST = "/category/listOfCategories";
+export const CATEGORY_OF_PRODUCTS = "/category/categoryOfProducts";

@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from 'react';
+import { Image, ImageSourcePropType, ImageStyle, StyleProp } from 'react-native';
 import { StatusCodes } from 'http-status-codes';
 import Toast from 'react-native-toast-message';
 import { ToastMessageType } from './enums';
+import fallbackimage from '../assets/images/fall_back_image1.png';
 
 export const checkStatusCodeSuccess = (data: StatusCodes) => {
   if (
@@ -66,4 +69,39 @@ export const handleApiResponse = async (
     }
     return error;
   }
+};
+
+export interface SafeImageProps {
+  uri: string;
+  style?: StyleProp<ImageStyle>;
+  resizeMode?: 'cover' | 'contain' | 'stretch' | 'repeat' | 'center';
+  fallbackUri?: ImageSourcePropType;
+}
+
+export const SafeImage: React.FC<SafeImageProps> = ({
+  uri,
+  style,
+  resizeMode = 'cover',
+  fallbackUri = fallbackimage,
+}) => {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [uri]);
+
+  return (
+    <Image
+      source={
+        imageError
+          ? fallbackUri
+          : { uri }
+      }
+      style={style}
+      resizeMode={resizeMode}
+      onError={() => {
+        setImageError(true);
+      }}
+    />
+  );
 };
