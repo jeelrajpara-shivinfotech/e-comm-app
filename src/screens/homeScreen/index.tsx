@@ -19,8 +19,13 @@ import {
 import { useEffect, useState } from 'react';
 import { BASE_IMAGE_URL } from '@env';
 import { homePageConstants } from '../../constants/HomePageConstants';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MainStackParamList } from '../../interface/navigationProps';
+import { navigationRoutes } from '../../constants/ShopPageConstants';
 
 const HomeScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +65,7 @@ const HomeScreen = () => {
       <TouchableOpacity
         style={homeScreenStyles.productCard}
         activeOpacity={0.8}
+        onPress={() => navigation.navigate(navigationRoutes.productCardScreen, { productId: item.id })}
       >
         <View style={homeScreenStyles.productImageContainer}>
           <SafeImage uri={`${BASE_IMAGE_URL}/${imagePath}`} style={homeScreenStyles.productImage} resizeMode="cover" />
