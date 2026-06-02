@@ -60,7 +60,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       },
       undefined,
       false,
-      false
+      false,
+      () => {
+        setCartItems([]);
+        setCartTotal(0);
+        setCartCount(0);
+      }
     );
     setLoading(false);
   }, []);
