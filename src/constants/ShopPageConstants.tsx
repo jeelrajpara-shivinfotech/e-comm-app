@@ -24,3 +24,60 @@ export const categoryProducts = {
     noProductsFound : "No products found in this category",
     sortBy : "Sort by"
 }
+
+export const filterScreenConstants = {
+    filters: "Filters",
+    priceRange: "Price range",
+    colors: "Colors",
+    sizes: "Sizes",
+    category: "Category",
+    brand: "Brand",
+    discard: "Discard",
+    apply: "Apply",
+    all: "All",
+    women: "Women",
+    men: "Men",
+    boys: "Boys",
+    girls: "Girls",
+    black: "Black",
+    white: "White",
+    red: "Red",
+    greyPurple: "Grey-Purple",
+    cream: "Cream",
+    navy: "Navy",
+    xs: "XS",
+    s: "S",
+    m: "M",
+    l: "L",
+    xl: "XL",
+    adidasOriginals: "adidas Originals",
+    jackJones: "Jack & Jones",
+    sOliver: "s.Oliver"
+}
+
+export const brandScreenConstants = {
+    brand: "Brand",
+    discard: "Discard",
+    apply: "Apply",
+    search: "Search",
+    noBrandsMatch : "No brands match your search"
+}
+
+export const brandList = [
+    'adidas',
+    'adidas Originals',
+    'Blend',
+    'Boutique Moschino',
+    'Champion',
+    'Diesel',
+    'Jack & Jones',
+    'Naf Naf',
+    'Red Valentino',
+    's.Oliver',
+    'Zara',
+    'H&M',
+    "Levi's",
+    'Tommy Hilfiger',
+    'Nike',
+    'Puma',
+];

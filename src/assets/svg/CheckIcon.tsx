@@ -12,8 +12,8 @@ const CheckIcon = (props: SvgProps) => (
   >
     <Path
       d="M20 6L9 17L4 12"
-      stroke="#2AA952"
-      strokeWidth="2"
+      stroke={props.stroke || "#2AA952"}
+      strokeWidth={props.strokeWidth || "2"}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
