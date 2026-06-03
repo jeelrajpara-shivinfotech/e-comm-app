@@ -31,11 +31,13 @@ const FiltersScreen = () => {
   const route = useRoute<RouteProp<MainStackParamList, 'FiltersScreen'>>();
   const { categoryId, categoryName, gender, currentFilters } =
     route.params || {};
+  const MIN_LIMIT = 0;
+  const MAX_LIMIT = 200;
   const [minPrice, setMinPrice] = useState<number>(
-    currentFilters?.priceRange?.[0] ?? 78,
+    currentFilters?.priceRange?.[0] ?? MIN_LIMIT,
   );
   const [maxPrice, setMaxPrice] = useState<number>(
-    currentFilters?.priceRange?.[1] ?? 143,
+    currentFilters?.priceRange?.[1] ?? MAX_LIMIT,
   );
   const [selectedColors, setSelectedColors] = useState<string[]>(
     currentFilters?.colors ?? [
@@ -56,8 +58,6 @@ const FiltersScreen = () => {
       filterScreenConstants.sOliver,
     ],
   );
-  const MIN_LIMIT = 0;
-  const MAX_LIMIT = 200;
   const leftX =
     ((minPrice - MIN_LIMIT) / (MAX_LIMIT - MIN_LIMIT)) * TRACK_WIDTH;
   const rightX =
@@ -140,8 +140,8 @@ const FiltersScreen = () => {
   };
 
   const handleDiscard = () => {
-    setMinPrice(78);
-    setMaxPrice(143);
+    setMinPrice(MIN_LIMIT);
+    setMaxPrice(MAX_LIMIT);
     setSelectedColors([]);
     setSelectedSizes([]);
     setSelectedCategories([]);
@@ -181,7 +181,6 @@ const FiltersScreen = () => {
       <SafeAreaView edges={['top']} style={{ backgroundColor: colors.white }}>
         <View style={styles.header}>
           <TouchableOpacity
-            style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
             <BackIcon />

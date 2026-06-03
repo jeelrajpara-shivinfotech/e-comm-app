@@ -79,7 +79,6 @@ const BrandScreen = () => {
       <SafeAreaView edges={['top']} style={{ backgroundColor: colors.white }}>
         <View style={styles.header}>
           <TouchableOpacity
-            style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
             <BackIcon />

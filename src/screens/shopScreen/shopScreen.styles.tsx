@@ -364,10 +364,6 @@ export const filterStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
   },
-  backButton: {
-    padding: 8,
-    marginLeft: -8,
-  },
   headerTitle: {
     ...Typography.regular18,
     fontWeight: '700',
@@ -612,10 +608,6 @@ export const brandStyles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     height: 56,
-  },
-  backButton: {
-    padding: 8,
-    marginLeft: -8,
   },
   headerTitle: {
     ...Typography.regular18,

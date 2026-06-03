@@ -23,7 +23,6 @@ export const baseBottomDrawerStyles = StyleSheet.create({
     maxHeight: SCREEN_HEIGHT * 0.8,
     paddingBottom: 34,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 8,
