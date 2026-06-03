@@ -10,4 +10,10 @@ export const colors = {
     lightPink : "rgba(184, 162, 162, 1)",
     lightYellow : "rgba(226, 196, 162, 1)",
     navyBlue : "rgba(28, 36, 66, 1)",
+    blue : "rgb(0, 51, 102)",
+    orange : "rgb(255, 102, 0)",
+    yellow : "rgb(255, 204, 0)",
+    purple : "rgba(63, 26, 113, 1)",
+    lightGold : "rgba(234, 224, 183, 1)",
+    gold : "rgba(212, 197, 144, 1)",
 }

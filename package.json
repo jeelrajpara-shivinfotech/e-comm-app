@@ -15,6 +15,7 @@
     "@react-navigation/bottom-tabs": "^7.16.1",
     "@react-navigation/native": "^7.2.4",
     "@react-navigation/native-stack": "^7.15.1",
+    "@stripe/stripe-react-native": "^0.66.0",
     "axios": "^1.16.1",
     "formik": "^2.4.9",
     "http-status-codes": "^2.3.0",

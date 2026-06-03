@@ -319,6 +319,11 @@ const BagScreen = () => {
             variant="primary"
             fullWidth
             containerStyle={styles.checkoutButton}
+            onPress={() => {
+              navigation.navigate('PaymentMethodsScreen', {
+                totalAmount: discountedTotal,
+              });
+            }}
           />
         </View>
       )}

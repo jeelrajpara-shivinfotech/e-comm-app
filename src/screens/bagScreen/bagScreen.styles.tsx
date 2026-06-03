@@ -389,3 +389,481 @@ export const bagScreenStyles = StyleSheet.create({
     marginBottom: 24,
   },
 });
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+export const paymentMethodScreenStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.lightGray,
+  },
+  flexOne: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    height: 56,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGray,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    ...Typography.regular18,
+    fontWeight: '700',
+    color: colors.black,
+  },
+  placeholder: {
+    width: 40,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 40,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    ...Typography.regular16,
+    fontWeight: '700',
+    color: colors.black,
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  editButtonText: {
+    ...Typography.regular14,
+    color: colors.red,
+    fontWeight: '600',
+  },
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  editCard: {
+    borderColor: colors.lightGray,
+    borderWidth: 1,
+  },
+  addressCardContent: {
+    gap: 4,
+  },
+  customerName: {
+    ...Typography.regular16,
+    fontWeight: '700',
+    color: colors.black,
+    marginBottom: 4,
+  },
+  addressLine: {
+    ...Typography.regular14,
+    color: colors.gray,
+    lineHeight: 20,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  flexHalf: {
+    flex: 1,
+  },
+  editActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 16,
+  },
+  actionBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cancelBtn: {
+    backgroundColor: colors.lightGray,
+  },
+  cancelBtnText: {
+    ...Typography.regular14,
+    color: colors.black,
+    fontWeight: '600',
+  },
+  saveBtn: {
+    backgroundColor: colors.red,
+  },
+  saveBtnText: {
+    ...Typography.regular14,
+    color: colors.white,
+    fontWeight: '600',
+  },
+  paymentSelectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  selectedCardMask: {
+    ...Typography.regular16,
+    color: colors.black,
+    fontWeight: '600',
+  },
+  brandBadge: {
+    width: 48,
+    height: 32,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  visaBadge: {
+    backgroundColor: colors.navyBlue,
+  },
+  visaBadgeText: {
+    color: colors.yellow,
+    ...Typography.regular14,
+    fontWeight: '900',
+    fontStyle: 'italic',
+  },
+  mcBadge: {
+    backgroundColor: colors.black,
+    flexDirection: 'row',
+  },
+  mcCircleLeft: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: colors.dangerRed,
+  },
+  mcCircleRight: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: colors.yellow,
+    opacity: 0.85,
+  },
+  deliveryRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 20,
+  },
+  deliveryCard: {
+    flex: 1,
+    height: 80,
+    borderRadius: 12,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    elevation: 2,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+  },
+  activeDeliveryCard: {
+    borderColor: colors.red,
+  },
+  courierLogoContainer: {
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  courierText: {
+    ...Typography.regular18
+  },
+  deliveryTimeText: {
+    ...Typography.regular14,
+    color: colors.gray,
+    marginTop: 4,
+    fontWeight: '500',
+  },
+  calcContainer: {
+    marginTop: 12,
+    marginBottom: 24,
+    gap: 12,
+  },
+  calcRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  calcLabel: {
+    ...Typography.regular14,
+    color: colors.gray,
+    fontWeight: '500',
+  },
+  calcValue: {
+    ...Typography.regular16,
+    color: colors.black,
+    fontWeight: '700',
+  },
+  summaryLabelText: {
+    ...Typography.regular16,
+    fontWeight: '700',
+    color: colors.gray,
+  },
+  summaryValueText: {
+    ...Typography.regular25,
+    fontWeight: '800',
+    color: colors.black,
+  },
+  submitOrderBtn: {
+    backgroundColor: colors.red,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 20,
+  },
+  savedCardsScroll: {
+    padding: 16,
+    paddingBottom: 100,
+  },
+  cardContainer: {
+    marginBottom: 24,
+  },
+  visualCard: {
+    height: 200,
+    borderRadius: 16,
+    padding: 24,
+    justifyContent: 'space-between',
+    elevation: 6,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    position: 'relative',
+  },
+  blackCard: {
+    backgroundColor: colors.black,
+  },
+  silverCard: {
+    backgroundColor: colors.lightGray,
+    borderColor: colors.gray,
+    borderWidth: 1,
+  },
+  purpleCard: {
+    backgroundColor: colors.purple,
+  },
+  goldChip: {
+    width: 38,
+    height: 28,
+    borderRadius: 6,
+    backgroundColor: colors.lightGold,
+    borderWidth: 1,
+    borderColor: colors.gold,
+  },
+  visualCardMask: {
+    ...Typography.regular25,
+    color: colors.white,
+    letterSpacing: 2,
+    fontWeight: '700',
+    marginTop: 20,
+  },
+  darkText: {
+    color: colors.black,
+  },
+  cardLogoPosition: {
+    position: 'absolute',
+    top: 24,
+    right: 24,
+  },
+  cardBrandLogoText: {
+    color: colors.white,
+    ...Typography.regular18,
+    fontWeight: '900',
+    fontStyle: 'italic',
+  },
+  visaBlueText: {
+    color: colors.navyBlue,
+  },
+  cardBrandMcLogo: {
+    flexDirection: 'row',
+  },
+  cardFooterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  visualCardLabel: {
+    ...Typography.regular12,
+    color: colors.lightGray,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+    fontWeight: '600',
+  },
+  grayLabel: {
+    color: colors.black,
+  },
+  visualCardValue: {
+    ...Typography.regular14,
+    color: colors.white,
+    fontWeight: '700',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    paddingHorizontal: 4,
+  },
+  customCheckSquare: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: colors.black,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  activeCustomCheckSquare: {
+    backgroundColor: colors.black,
+  },
+  checkboxLabel: {
+    ...Typography.regular13,
+    color: colors.black,
+    fontWeight: '600',
+  },
+  fabButton: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.black,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 6,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  fabIconText: {
+    ...Typography.regular30,
+    color: colors.white,
+    fontWeight: '600',
+    marginTop: -2,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: colors.black,
+    justifyContent: 'flex-end',
+  },
+  dismissOverlay: {
+    flex: 1,
+  },
+  addCardDrawer: {
+    height: SCREEN_HEIGHT * 0.75,
+    backgroundColor: colors.lightGray,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  drawerHandle: {
+    width: 60,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.gray,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  drawerTitle: {
+    ...Typography.regular18,
+    fontWeight: '800',
+    color: colors.black,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  drawerScroll: {
+    paddingBottom: 40,
+  },
+  relativeInputContainer: {
+    position: 'relative',
+  },
+  brandIconInputPosition: {
+    position: 'absolute',
+    right: 12,
+    top: 36,
+  },
+  visaSmallBadge: {
+    backgroundColor: colors.navyBlue,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  visaSmallText: {
+    color: colors.yellow,
+    ...Typography.regular10,
+    fontWeight: '900',
+    fontStyle: 'italic',
+  },
+  mcSmallBadge: {
+    flexDirection: 'row',
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  addCardBtn: {
+    backgroundColor: colors.red,
+    height: 50,
+    borderRadius: 25,
+  },
+});
+
+export const successScreenStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  illustrationContainer: {
+    marginBottom: 40,
+    marginRight: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    ...Typography.regular34,
+    fontWeight: '800',
+    color: colors.black,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  subtext: {
+    ...Typography.regular16,
+    color: colors.black,
+    textAlign: 'center',
+    lineHeight: 22,
+    fontWeight: '600',
+  },
+  continueButton: {
+    backgroundColor: colors.red,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 20,
+    elevation: 3,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+});

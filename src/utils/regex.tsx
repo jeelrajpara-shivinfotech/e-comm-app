@@ -1,3 +1,12 @@
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[A-Za-z]{2,}$/;
 export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 export const phoneNumberRegex = /^[0-9]{0,10}$/;
+export const cardRegex = /^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/;
+export const visaRegex = /^4/;
+export const nonDigitsRegex = /\D/g;
+export const digitsChunksRegex = /\d{1,4}/g;
+export const whitespaceRegex = /\s+/g;
+export const creditCardNumberRegex = /^\d{15,19}$/;
+export const cardExpiryRegex = /^(0[1-9]|1[0-2])\/[0-9]{2}$/;
+export const cardCvvRegex = /^[0-9]{3,4}$/;
+export const cardNameRegex = /^[a-zA-Z\s.'-]+$/;

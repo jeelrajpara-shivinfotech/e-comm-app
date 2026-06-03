@@ -54,6 +54,10 @@ export type MainStackParamList = {
   [navigationRoutes.productCardScreen]: {
     productId: number;
   };
+  PaymentMethodsScreen: {
+    totalAmount: number;
+  };
+  SuccessScreen: undefined;
 };
 
 export type RootStackParamList = {
