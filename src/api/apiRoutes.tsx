@@ -16,3 +16,4 @@ export const DELETE_CART = "/cart/deleteCart/";
 export const CREATE_PAYMENT = "/payment/create-payment";
 export const VERIFY_PAYMENT = "/payment/verify-payment";
 export const REFUND_PAYMENT = "/payment/refund-payment";
+export const CREATE_ORDER = "/order/create-order"

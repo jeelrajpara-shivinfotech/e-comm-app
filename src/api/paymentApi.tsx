@@ -1,4 +1,9 @@
-import { CREATE_PAYMENT, VERIFY_PAYMENT, REFUND_PAYMENT } from './apiRoutes';
+import {
+  CREATE_PAYMENT,
+  VERIFY_PAYMENT,
+  REFUND_PAYMENT,
+  CREATE_ORDER,
+} from './apiRoutes';
 import { authServices } from './apiService';
 
 export interface CreatePaymentPayload {
@@ -16,6 +21,12 @@ export interface RefundPaymentPayload {
   amount: number;
 }
 
+export interface CreateOrderPayload {
+  payment_mode: 'online' | 'cod';
+  paymentMethod: string;
+  cart_id: number;
+}
+
 export const createPaymentApi = async (data: CreatePaymentPayload) => {
   const response = await authServices.post(CREATE_PAYMENT, data);
   return response.data;
@@ -28,5 +39,10 @@ export const verifyPaymentApi = async (data: VerifyPaymentPayload) => {
 
 export const refundPaymentApi = async (data: RefundPaymentPayload) => {
   const response = await authServices.post(REFUND_PAYMENT, data);
+  return response.data;
+};
+
+export const createOrderApi = async (data: CreateOrderPayload) => {
+  const response = await authServices.post(CREATE_ORDER, data);
   return response.data;
 };

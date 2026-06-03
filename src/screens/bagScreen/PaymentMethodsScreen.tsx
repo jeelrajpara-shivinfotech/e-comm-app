@@ -20,7 +20,12 @@ import BackIcon from '../../assets/svg/BackIcon';
 import CheckIcon from '../../assets/svg/CheckIcon';
 import BaseButton from '../../components/BaseButton';
 import BaseTextInput from '../../components/BaseTextInput';
-import { createPaymentApi, verifyPaymentApi } from '../../api/paymentApi';
+import {
+  createPaymentApi,
+  verifyPaymentApi,
+  createOrderApi,
+} from '../../api/paymentApi';
+import { viewCartApi } from '../../api/cartApi';
 import { useCart } from '../../context/CartContext';
 import { MainStackParamList } from '../../interface/navigationProps';
 import { bagPageConstants } from '../../constants/BagPageConstants';
@@ -35,10 +40,16 @@ import {
   cardCvvRegex,
   cardNameRegex,
 } from '../../utils/regex';
-import { loginPageConstants, signUpPageConstants } from '../../constants/AuthPageConstants';
+import {
+  loginPageConstants,
+  signUpPageConstants,
+} from '../../constants/AuthPageConstants';
 import { paymentMethodScreenStyles } from './bagScreen.styles';
 
-type PaymentScreenRouteProp = RouteProp<MainStackParamList, 'PaymentMethodsScreen'>;
+type PaymentScreenRouteProp = RouteProp<
+  MainStackParamList,
+  'PaymentMethodsScreen'
+>;
 type CheckoutViewType = 'checkout' | 'saved_cards';
 type DeliveryMethodType = 'fedex' | 'usps' | 'dhl';
 
@@ -61,15 +72,19 @@ interface ShippingDetails {
 }
 
 const PaymentMethodsScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const route = useRoute<PaymentScreenRouteProp>();
   const { totalAmount } = route.params;
   const { fetchCart } = useCart();
   const { confirmPayment } = useConfirmPayment();
   const { createPaymentMethod } = useStripe();
   const [currentView, setCurrentView] = useState<CheckoutViewType>('checkout');
-  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
-  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethodType>(bagPageConstants.courierFedex);
+  const [isProcessingPayment, setIsProcessingPayment] =
+    useState<boolean>(false);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethodType>(
+    bagPageConstants.courierFedex,
+  );
   const courierFees: Record<DeliveryMethodType, number> = {
     [bagPageConstants.courierFedex]: 15,
     [bagPageConstants.courierUsps]: 10,
@@ -93,12 +108,22 @@ const PaymentMethodsScreen = () => {
       theme: bagPageConstants.themeSilver,
     },
   ]);
-  const [selectedCardId, setSelectedCardId] = useState<string>(bagPageConstants.defaultCard1Id);
+  const [selectedCardId, setSelectedCardId] = useState<string>(
+    bagPageConstants.defaultCard1Id,
+  );
   const [isAddCardOpen, setIsAddCardOpen] = useState<boolean>(false);
-  const [newCardName, setNewCardName] = useState<string>(bagPageConstants.emptyString);
-  const [newCardNumber, setNewCardNumber] = useState<string>(bagPageConstants.emptyString);
-  const [newCardExpiry, setNewCardExpiry] = useState<string>(bagPageConstants.emptyString);
-  const [newCardCvv, setNewCardCvv] = useState<string>(bagPageConstants.emptyString);
+  const [newCardName, setNewCardName] = useState<string>(
+    bagPageConstants.emptyString,
+  );
+  const [newCardNumber, setNewCardNumber] = useState<string>(
+    bagPageConstants.emptyString,
+  );
+  const [newCardExpiry, setNewCardExpiry] = useState<string>(
+    bagPageConstants.emptyString,
+  );
+  const [newCardCvv, setNewCardCvv] = useState<string>(
+    bagPageConstants.emptyString,
+  );
   const [isDefaultNewCard, setIsDefaultNewCard] = useState<boolean>(true);
   const [isTokenizing, setIsTokenizing] = useState<boolean>(false);
   const [isEditingAddress, setIsEditingAddress] = useState<boolean>(false);
@@ -110,8 +135,11 @@ const PaymentMethodsScreen = () => {
     zipCode: bagPageConstants.defaultShipZip,
     country: bagPageConstants.defaultShipCountry,
   });
-  const [addressDraft, setAddressDraft] = useState<ShippingDetails>({ ...shippingDetails });
-  const activeCard = savedCards.find((c) => c.id === selectedCardId) || savedCards[0];
+  const [addressDraft, setAddressDraft] = useState<ShippingDetails>({
+    ...shippingDetails,
+  });
+  const activeCard =
+    savedCards.find(c => c.id === selectedCardId) || savedCards[0];
   const getCardBrand = (number: string): 'Visa' | 'Mastercard' | 'Unknown' => {
     const sanitized = number.replace(whitespaceRegex, '');
     if (visaRegex.test(sanitized)) return bagPageConstants.brandVisa;
@@ -145,19 +173,31 @@ const PaymentMethodsScreen = () => {
   const handleAddCard = async () => {
     const sanitizedCard = newCardNumber.replace(whitespaceRegex, '');
     if (!newCardName.trim() || !cardNameRegex.test(newCardName)) {
-      Toast.show({ type: bagPageConstants.toastTypeError, text1: bagPageConstants.errorValidationName });
+      Toast.show({
+        type: bagPageConstants.toastTypeError,
+        text1: bagPageConstants.errorValidationName,
+      });
       return;
     }
     if (!creditCardNumberRegex.test(sanitizedCard)) {
-      Toast.show({ type: bagPageConstants.toastTypeError, text1: bagPageConstants.errorValidationCardNumber });
+      Toast.show({
+        type: bagPageConstants.toastTypeError,
+        text1: bagPageConstants.errorValidationCardNumber,
+      });
       return;
     }
     if (!cardExpiryRegex.test(newCardExpiry)) {
-      Toast.show({ type: bagPageConstants.toastTypeError, text1: bagPageConstants.errorValidationExpiry });
+      Toast.show({
+        type: bagPageConstants.toastTypeError,
+        text1: bagPageConstants.errorValidationExpiry,
+      });
       return;
     }
     if (!cardCvvRegex.test(newCardCvv)) {
-      Toast.show({ type: bagPageConstants.toastTypeError, text1: bagPageConstants.errorValidationCvv });
+      Toast.show({
+        type: bagPageConstants.toastTypeError,
+        text1: bagPageConstants.errorValidationCvv,
+      });
       return;
     }
 
@@ -171,7 +211,8 @@ const PaymentMethodsScreen = () => {
       const [expMonth, expYear] = newCardExpiry.split('/');
       const formattedYear = '20' + expYear;
       let cardId = '';
-      let brand: 'Visa' | 'Mastercard' | 'Unknown' = bagPageConstants.brandUnknown;
+      let brand: 'Visa' | 'Mastercard' | 'Unknown' =
+        bagPageConstants.brandUnknown;
       let last4 = sanitizedCard.slice(-4);
 
       try {
@@ -186,12 +227,20 @@ const PaymentMethodsScreen = () => {
             },
             billingDetails: {
               name: newCardName,
-            }
-          }
+            },
+          },
         };
         const tokenResult = (await createPaymentMethod(
-          params as unknown as Parameters<ReturnType<typeof useStripe>['createPaymentMethod']>[0]
-        )) as unknown as { paymentMethod?: { id?: string; card?: { brand?: string; last4?: string } }; error?: { message: string } };
+          params as unknown as Parameters<
+            ReturnType<typeof useStripe>['createPaymentMethod']
+          >[0],
+        )) as unknown as {
+          paymentMethod?: {
+            id?: string;
+            card?: { brand?: string; last4?: string };
+          };
+          error?: { message: string };
+        };
 
         if (tokenResult.error) {
           throw new Error(tokenResult.error.message);
@@ -200,11 +249,17 @@ const PaymentMethodsScreen = () => {
         const stripeCard = tokenResult.paymentMethod?.card;
         const stripeBrand = tokenResult.paymentMethod?.card?.brand;
 
-        if (stripeBrand?.toLowerCase() === bagPageConstants.brandVisaLc) brand = bagPageConstants.brandVisa;
-        else if (stripeBrand?.toLowerCase() === bagPageConstants.brandMastercardLc) brand = bagPageConstants.brandMastercard;
+        if (stripeBrand?.toLowerCase() === bagPageConstants.brandVisaLc)
+          brand = bagPageConstants.brandVisa;
+        else if (
+          stripeBrand?.toLowerCase() === bagPageConstants.brandMastercardLc
+        )
+          brand = bagPageConstants.brandMastercard;
         else brand = getCardBrand(sanitizedCard);
 
-        cardId = tokenResult.paymentMethod?.id || `${bagPageConstants.stripeCustomPrefix}_${Date.now()}`;
+        cardId =
+          tokenResult.paymentMethod?.id ||
+          `${bagPageConstants.stripeCustomPrefix}_${Date.now()}`;
         last4 = stripeCard?.last4 || sanitizedCard.slice(-4);
       } catch (tokenErr) {
         brand = getCardBrand(sanitizedCard);
@@ -212,10 +267,14 @@ const PaymentMethodsScreen = () => {
         last4 = sanitizedCard.slice(-4);
       }
 
-      const themeOptions: (typeof bagPageConstants.themeBlack | typeof bagPageConstants.themeSilver | typeof bagPageConstants.themePurple)[] = [
+      const themeOptions: (
+        | typeof bagPageConstants.themeBlack
+        | typeof bagPageConstants.themeSilver
+        | typeof bagPageConstants.themePurple
+      )[] = [
         bagPageConstants.themeBlack,
         bagPageConstants.themeSilver,
-        bagPageConstants.themePurple
+        bagPageConstants.themePurple,
       ];
       const randomTheme = themeOptions[savedCards.length % themeOptions.length];
 
@@ -237,7 +296,11 @@ const PaymentMethodsScreen = () => {
       Toast.show({
         type: bagPageConstants.toastTypeSuccess,
         text1: bagPageConstants.toastCardAdded,
-        text2: `Added ${brand} ending in ${last4} (${cardId.startsWith(bagPageConstants.stripeMockPrefix) ? bagPageConstants.offlineModeLabel : bagPageConstants.securedLabel}).`,
+        text2: `Added ${brand} ending in ${last4} (${
+          cardId.startsWith(bagPageConstants.stripeMockPrefix)
+            ? bagPageConstants.offlineModeLabel
+            : bagPageConstants.securedLabel
+        }).`,
       });
       setNewCardName(bagPageConstants.emptyString);
       setNewCardNumber(bagPageConstants.emptyString);
@@ -249,7 +312,7 @@ const PaymentMethodsScreen = () => {
       Toast.show({
         type: bagPageConstants.toastTypeError,
         text1: bagPageConstants.errorCardAdditionTitle,
-        text2: error.message || bagPageConstants.errorCardAdditionDetail
+        text2: error.message || bagPageConstants.errorCardAdditionDetail,
       });
     } finally {
       setIsTokenizing(false);
@@ -269,17 +332,32 @@ const PaymentMethodsScreen = () => {
       const response = await createPaymentApi({
         amount: amountInPaise,
         currency: bagPageConstants.currencyUsd,
-        paymentMethod: activeCard.id.startsWith(bagPageConstants.stripePmPrefix) ? activeCard.id : bagPageConstants.testVisaPaymentMethod,
+        paymentMethod: activeCard.id.startsWith(bagPageConstants.stripePmPrefix)
+          ? activeCard.id
+          : bagPageConstants.testVisaPaymentMethod,
       });
 
-      const clientSecret = response.clientSecret || response.client_secret || response.data?.clientSecret || response.data?.client_secret;
-      const intentId = response.payment_id || response.paymentIntent || response.id || response.data?.paymentIntent || response.data?.id;
+      const clientSecret =
+        response.clientSecret ||
+        response.client_secret ||
+        response.data?.clientSecret ||
+        response.data?.client_secret;
+      const intentId =
+        response.payment_id ||
+        response.paymentIntent ||
+        response.id ||
+        response.data?.paymentIntent ||
+        response.data?.id;
 
       if (!clientSecret) {
         throw new Error(bagPageConstants.errorClientSecret);
       }
 
-      const isMockCard = activeCard.id === bagPageConstants.defaultCard1Id || activeCard.id === bagPageConstants.defaultCard2Id || activeCard.id.startsWith(bagPageConstants.stripeMockPrefix) || activeCard.id.startsWith(bagPageConstants.stripeCustomPrefix);
+      const isMockCard =
+        activeCard.id === bagPageConstants.defaultCard1Id ||
+        activeCard.id === bagPageConstants.defaultCard2Id ||
+        activeCard.id.startsWith(bagPageConstants.stripeMockPrefix) ||
+        activeCard.id.startsWith(bagPageConstants.stripeCustomPrefix);
 
       if (isMockCard) {
         Toast.show({
@@ -288,7 +366,7 @@ const PaymentMethodsScreen = () => {
           text2: bagPageConstants.toastConfirmingMock,
         });
 
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 1200));
+        await new Promise<void>(resolve => setTimeout(() => resolve(), 1200));
 
         Toast.show({
           type: bagPageConstants.toastTypeSuccess,
@@ -312,13 +390,16 @@ const PaymentMethodsScreen = () => {
                 state: shippingDetails.state,
                 postalCode: shippingDetails.zipCode,
                 country: bagPageConstants.countryUsCode,
-              }
-            }
-          }
+              },
+            },
+          },
         });
 
         if (confirmResult.error) {
-          if (confirmResult.error.code === bagPageConstants.confirmResultCancelCode) {
+          if (
+            confirmResult.error.code ===
+            bagPageConstants.confirmResultCancelCode
+          ) {
             Toast.show({
               type: bagPageConstants.toastTypeInfo,
               text1: bagPageConstants.toastPaymentCancelled,
@@ -335,6 +416,24 @@ const PaymentMethodsScreen = () => {
           return;
         }
       }
+      try {
+        const cartResponse = await viewCartApi();
+        const cartId = cartResponse?.data?.id;
+        if (cartId) {
+          await createOrderApi({
+            payment_mode: 'online',
+            paymentMethod: activeCard.id.startsWith(
+              bagPageConstants.stripePmPrefix,
+            )
+              ? activeCard.id
+              : bagPageConstants.testVisaPaymentMethod,
+            cart_id: cartId,
+          });
+        }
+      } catch (orderErr) {
+        console.log('Error creating order silently:', orderErr);
+      }
+
       Toast.show({
         type: bagPageConstants.toastTypeInfo,
         text1: bagPageConstants.toastVerifyingTransaction,
@@ -361,7 +460,9 @@ const PaymentMethodsScreen = () => {
           navigation.navigate(bagPageConstants.successScreenRoute);
         }, 1500);
       } else {
-        throw new Error(verifyResponse.message || bagPageConstants.errorVerificationRejected);
+        throw new Error(
+          verifyResponse.message || bagPageConstants.errorVerificationRejected,
+        );
       }
     } catch (err) {
       const error = err as Error;
@@ -378,7 +479,10 @@ const PaymentMethodsScreen = () => {
   const grandTotal = totalAmount + deliveryPrice;
 
   return (
-    <SafeAreaView style={paymentMethodScreenStyles.container} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={paymentMethodScreenStyles.container}
+      edges={['top', 'bottom']}
+    >
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       {currentView === bagPageConstants.checkoutViewMode ? (
         <View style={paymentMethodScreenStyles.flexOne}>
@@ -390,45 +494,70 @@ const PaymentMethodsScreen = () => {
             >
               <BackIcon stroke={colors.black} />
             </TouchableOpacity>
-            <Text style={paymentMethodScreenStyles.headerTitle}>{bagPageConstants.checkoutTitle}</Text>
+            <Text style={paymentMethodScreenStyles.headerTitle}>
+              {bagPageConstants.checkoutTitle}
+            </Text>
             <View style={paymentMethodScreenStyles.placeholder} />
           </View>
 
-          <ScrollView contentContainerStyle={paymentMethodScreenStyles.scrollContent} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            contentContainerStyle={paymentMethodScreenStyles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
             <View style={paymentMethodScreenStyles.sectionHeaderRow}>
-              <Text style={paymentMethodScreenStyles.sectionTitle}>{bagPageConstants.shippingAddressTitle}</Text>
+              <Text style={paymentMethodScreenStyles.sectionTitle}>
+                {bagPageConstants.shippingAddressTitle}
+              </Text>
               {!isEditingAddress && (
-                <TouchableOpacity activeOpacity={0.7} onPress={() => setIsEditingAddress(true)}>
-                  <Text style={paymentMethodScreenStyles.editButtonText}>{bagPageConstants.changeBtn}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => setIsEditingAddress(true)}
+                >
+                  <Text style={paymentMethodScreenStyles.editButtonText}>
+                    {bagPageConstants.changeBtn}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
 
             {isEditingAddress ? (
-              <View style={[paymentMethodScreenStyles.card, paymentMethodScreenStyles.editCard]}>
+              <View
+                style={[
+                  paymentMethodScreenStyles.card,
+                  paymentMethodScreenStyles.editCard,
+                ]}
+              >
                 <BaseTextInput
                   label={loginPageConstants.name}
                   value={addressDraft.fullName}
-                  onChangeText={(val) => setAddressDraft({ ...addressDraft, fullName: val })}
+                  onChangeText={val =>
+                    setAddressDraft({ ...addressDraft, fullName: val })
+                  }
                 />
                 <BaseTextInput
                   label={signUpPageConstants.address}
                   value={addressDraft.addressLine}
-                  onChangeText={(val) => setAddressDraft({ ...addressDraft, addressLine: val })}
+                  onChangeText={val =>
+                    setAddressDraft({ ...addressDraft, addressLine: val })
+                  }
                 />
                 <View style={paymentMethodScreenStyles.inputRow}>
                   <View style={paymentMethodScreenStyles.flexHalf}>
                     <BaseTextInput
                       label={signUpPageConstants.city}
                       value={addressDraft.city}
-                      onChangeText={(val) => setAddressDraft({ ...addressDraft, city: val })}
+                      onChangeText={val =>
+                        setAddressDraft({ ...addressDraft, city: val })
+                      }
                     />
                   </View>
                   <View style={paymentMethodScreenStyles.flexHalf}>
                     <BaseTextInput
                       label={signUpPageConstants.state}
                       value={addressDraft.state}
-                      onChangeText={(val) => setAddressDraft({ ...addressDraft, state: val })}
+                      onChangeText={val =>
+                        setAddressDraft({ ...addressDraft, state: val })
+                      }
                     />
                   </View>
                 </View>
@@ -438,130 +567,228 @@ const PaymentMethodsScreen = () => {
                       label={signUpPageConstants.postalCode}
                       value={addressDraft.zipCode}
                       keyboardType="numeric"
-                      onChangeText={(val) => setAddressDraft({ ...addressDraft, zipCode: val })}
+                      onChangeText={val =>
+                        setAddressDraft({ ...addressDraft, zipCode: val })
+                      }
                     />
                   </View>
                   <View style={paymentMethodScreenStyles.flexHalf}>
                     <BaseTextInput
                       label={signUpPageConstants.country}
                       value={addressDraft.country}
-                      onChangeText={(val) => setAddressDraft({ ...addressDraft, country: val })}
+                      onChangeText={val =>
+                        setAddressDraft({ ...addressDraft, country: val })
+                      }
                     />
                   </View>
                 </View>
                 <View style={paymentMethodScreenStyles.editActionsRow}>
                   <TouchableOpacity
-                    style={[paymentMethodScreenStyles.actionBtn, paymentMethodScreenStyles.cancelBtn]}
+                    style={[
+                      paymentMethodScreenStyles.actionBtn,
+                      paymentMethodScreenStyles.cancelBtn,
+                    ]}
                     onPress={() => {
                       setAddressDraft({ ...shippingDetails });
                       setIsEditingAddress(false);
                     }}
                   >
-                    <Text style={paymentMethodScreenStyles.cancelBtnText}>Cancel</Text>
+                    <Text style={paymentMethodScreenStyles.cancelBtnText}>
+                      Cancel
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[paymentMethodScreenStyles.actionBtn, paymentMethodScreenStyles.saveBtn]}
+                    style={[
+                      paymentMethodScreenStyles.actionBtn,
+                      paymentMethodScreenStyles.saveBtn,
+                    ]}
                     onPress={handleSaveAddress}
                   >
-                    <Text style={paymentMethodScreenStyles.saveBtnText}>{bagPageConstants.saveBtnLabel}</Text>
+                    <Text style={paymentMethodScreenStyles.saveBtnText}>
+                      {bagPageConstants.saveBtnLabel}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
             ) : (
               <View style={paymentMethodScreenStyles.card}>
                 <View style={paymentMethodScreenStyles.addressCardContent}>
-                  <Text style={paymentMethodScreenStyles.customerName}>{shippingDetails.fullName}</Text>
+                  <Text style={paymentMethodScreenStyles.customerName}>
+                    {shippingDetails.fullName}
+                  </Text>
                   <Text style={paymentMethodScreenStyles.addressLine}>
-                    {shippingDetails.addressLine}{'\n'}
-                    {shippingDetails.city}, {shippingDetails.state} {shippingDetails.zipCode}, {shippingDetails.country}
+                    {shippingDetails.addressLine}
+                    {'\n'}
+                    {shippingDetails.city}, {shippingDetails.state}{' '}
+                    {shippingDetails.zipCode}, {shippingDetails.country}
                   </Text>
                 </View>
               </View>
             )}
 
             <View style={paymentMethodScreenStyles.sectionHeaderRow}>
-              <Text style={paymentMethodScreenStyles.sectionTitle}>{bagPageConstants.paymentTitle}</Text>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setCurrentView('saved_cards')}>
-                <Text style={paymentMethodScreenStyles.editButtonText}>{bagPageConstants.changeBtn}</Text>
+              <Text style={paymentMethodScreenStyles.sectionTitle}>
+                {bagPageConstants.paymentTitle}
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setCurrentView('saved_cards')}
+              >
+                <Text style={paymentMethodScreenStyles.editButtonText}>
+                  {bagPageConstants.changeBtn}
+                </Text>
               </TouchableOpacity>
             </View>
 
             <View style={paymentMethodScreenStyles.card}>
               <View style={paymentMethodScreenStyles.paymentSelectionRow}>
                 {activeCard.brand === 'Visa' ? (
-                  <View style={[paymentMethodScreenStyles.brandBadge, paymentMethodScreenStyles.visaBadge]}>
-                    <Text style={paymentMethodScreenStyles.visaBadgeText}>VISA</Text>
+                  <View
+                    style={[
+                      paymentMethodScreenStyles.brandBadge,
+                      paymentMethodScreenStyles.visaBadge,
+                    ]}
+                  >
+                    <Text style={paymentMethodScreenStyles.visaBadgeText}>
+                      VISA
+                    </Text>
                   </View>
                 ) : (
-                  <View style={[paymentMethodScreenStyles.brandBadge, paymentMethodScreenStyles.mcBadge]}>
+                  <View
+                    style={[
+                      paymentMethodScreenStyles.brandBadge,
+                      paymentMethodScreenStyles.mcBadge,
+                    ]}
+                  >
                     <View style={paymentMethodScreenStyles.mcCircleLeft} />
                     <View style={paymentMethodScreenStyles.mcCircleRight} />
                   </View>
                 )}
                 <Text style={paymentMethodScreenStyles.selectedCardMask}>
-                  {bagPageConstants.cardNumberMask}{activeCard.last4}
+                  {bagPageConstants.cardNumberMask}
+                  {activeCard.last4}
                 </Text>
               </View>
             </View>
-            <Text style={paymentMethodScreenStyles.sectionTitle}>{bagPageConstants.deliveryMethodTitle}</Text>
+            <Text style={paymentMethodScreenStyles.sectionTitle}>
+              {bagPageConstants.deliveryMethodTitle}
+            </Text>
             <View style={paymentMethodScreenStyles.deliveryRow}>
               <TouchableOpacity
-                style={[paymentMethodScreenStyles.deliveryCard, deliveryMethod === bagPageConstants.courierFedex && paymentMethodScreenStyles.activeDeliveryCard]}
+                style={[
+                  paymentMethodScreenStyles.deliveryCard,
+                  deliveryMethod === bagPageConstants.courierFedex &&
+                    paymentMethodScreenStyles.activeDeliveryCard,
+                ]}
                 activeOpacity={0.8}
                 onPress={() => setDeliveryMethod(bagPageConstants.courierFedex)}
               >
                 <View style={paymentMethodScreenStyles.courierLogoContainer}>
-                  <Text style={[paymentMethodScreenStyles.courierText, { color: colors.orange, fontWeight: '800' }]}>
+                  <Text
+                    style={[
+                      paymentMethodScreenStyles.courierText,
+                      { color: colors.orange, fontWeight: '800' },
+                    ]}
+                  >
                     {bagPageConstants.courierFedexLabel}
                   </Text>
                 </View>
-                <Text style={paymentMethodScreenStyles.deliveryTimeText}>{bagPageConstants.deliveryTimeLabel}</Text>
+                <Text style={paymentMethodScreenStyles.deliveryTimeText}>
+                  {bagPageConstants.deliveryTimeLabel}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[paymentMethodScreenStyles.deliveryCard, deliveryMethod === bagPageConstants.courierUsps && paymentMethodScreenStyles.activeDeliveryCard]}
+                style={[
+                  paymentMethodScreenStyles.deliveryCard,
+                  deliveryMethod === bagPageConstants.courierUsps &&
+                    paymentMethodScreenStyles.activeDeliveryCard,
+                ]}
                 activeOpacity={0.8}
                 onPress={() => setDeliveryMethod(bagPageConstants.courierUsps)}
               >
                 <View style={paymentMethodScreenStyles.courierLogoContainer}>
-                  <Text style={[paymentMethodScreenStyles.courierText, { color: colors.blue, fontWeight: '800', fontStyle: 'italic' }]}>
+                  <Text
+                    style={[
+                      paymentMethodScreenStyles.courierText,
+                      {
+                        color: colors.blue,
+                        fontWeight: '800',
+                        fontStyle: 'italic',
+                      },
+                    ]}
+                  >
                     {bagPageConstants.courierUspsLabel}
                   </Text>
                 </View>
-                <Text style={paymentMethodScreenStyles.deliveryTimeText}>{bagPageConstants.deliveryTimeLabel}</Text>
+                <Text style={paymentMethodScreenStyles.deliveryTimeText}>
+                  {bagPageConstants.deliveryTimeLabel}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[paymentMethodScreenStyles.deliveryCard, deliveryMethod === bagPageConstants.courierDhl && paymentMethodScreenStyles.activeDeliveryCard]}
+                style={[
+                  paymentMethodScreenStyles.deliveryCard,
+                  deliveryMethod === bagPageConstants.courierDhl &&
+                    paymentMethodScreenStyles.activeDeliveryCard,
+                ]}
                 activeOpacity={0.8}
                 onPress={() => setDeliveryMethod(bagPageConstants.courierDhl)}
               >
                 <View style={paymentMethodScreenStyles.courierLogoContainer}>
-                  <Text style={[paymentMethodScreenStyles.courierText, { color: colors.yellow, fontWeight: '900' }]}>
+                  <Text
+                    style={[
+                      paymentMethodScreenStyles.courierText,
+                      { color: colors.yellow, fontWeight: '900' },
+                    ]}
+                  >
                     {bagPageConstants.courierDhlLabel}
                   </Text>
                 </View>
-                <Text style={paymentMethodScreenStyles.deliveryTimeText}>{bagPageConstants.deliveryTimeLabel}</Text>
+                <Text style={paymentMethodScreenStyles.deliveryTimeText}>
+                  {bagPageConstants.deliveryTimeLabel}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={paymentMethodScreenStyles.calcContainer}>
               <View style={paymentMethodScreenStyles.calcRow}>
-                <Text style={paymentMethodScreenStyles.calcLabel}>{bagPageConstants.orderLabel}</Text>
-                <Text style={paymentMethodScreenStyles.calcValue}>{totalAmount}{bagPageConstants.currencySymbol}</Text>
+                <Text style={paymentMethodScreenStyles.calcLabel}>
+                  {bagPageConstants.orderLabel}
+                </Text>
+                <Text style={paymentMethodScreenStyles.calcValue}>
+                  {totalAmount}
+                  {bagPageConstants.currencySymbol}
+                </Text>
               </View>
               <View style={paymentMethodScreenStyles.calcRow}>
-                <Text style={paymentMethodScreenStyles.calcLabel}>{bagPageConstants.deliveryLabel}</Text>
-                <Text style={paymentMethodScreenStyles.calcValue}>{deliveryPrice}{bagPageConstants.currencySymbol}</Text>
+                <Text style={paymentMethodScreenStyles.calcLabel}>
+                  {bagPageConstants.deliveryLabel}
+                </Text>
+                <Text style={paymentMethodScreenStyles.calcValue}>
+                  {deliveryPrice}
+                  {bagPageConstants.currencySymbol}
+                </Text>
               </View>
-              <View style={[paymentMethodScreenStyles.calcRow, { marginTop: 14 }]}>
-                <Text style={paymentMethodScreenStyles.summaryLabelText}>{bagPageConstants.summaryLabel}</Text>
-                <Text style={paymentMethodScreenStyles.summaryValueText}>{grandTotal}{bagPageConstants.currencySymbol}</Text>
+              <View
+                style={[paymentMethodScreenStyles.calcRow, { marginTop: 14 }]}
+              >
+                <Text style={paymentMethodScreenStyles.summaryLabelText}>
+                  {bagPageConstants.summaryLabel}
+                </Text>
+                <Text style={paymentMethodScreenStyles.summaryValueText}>
+                  {grandTotal}
+                  {bagPageConstants.currencySymbol}
+                </Text>
               </View>
             </View>
 
             {/* Submit Button */}
             <BaseButton
-              title={isProcessingPayment ? 'PROCESSING...' : bagPageConstants.submitOrderBtn}
+              title={
+                isProcessingPayment
+                  ? 'PROCESSING...'
+                  : bagPageConstants.submitOrderBtn
+              }
               variant="primary"
               fullWidth
               isLoading={isProcessingPayment}
@@ -580,50 +807,115 @@ const PaymentMethodsScreen = () => {
             >
               <BackIcon stroke={colors.black} />
             </TouchableOpacity>
-            <Text style={paymentMethodScreenStyles.headerTitle}>{bagPageConstants.paymentMethodsTitle}</Text>
+            <Text style={paymentMethodScreenStyles.headerTitle}>
+              {bagPageConstants.paymentMethodsTitle}
+            </Text>
             <View style={paymentMethodScreenStyles.placeholder} />
           </View>
 
           <View style={paymentMethodScreenStyles.flexOne}>
-            <ScrollView contentContainerStyle={paymentMethodScreenStyles.savedCardsScroll} showsVerticalScrollIndicator={false}>
-              <Text style={paymentMethodScreenStyles.sectionTitle}>{bagPageConstants.yourPaymentCardsTitle}</Text>
+            <ScrollView
+              contentContainerStyle={paymentMethodScreenStyles.savedCardsScroll}
+              showsVerticalScrollIndicator={false}
+            >
+              <Text style={paymentMethodScreenStyles.sectionTitle}>
+                {bagPageConstants.yourPaymentCardsTitle}
+              </Text>
 
-              {savedCards.map((card) => {
+              {savedCards.map(card => {
                 const isSelected = card.id === selectedCardId;
                 const cardStyle =
-                  card.theme === bagPageConstants.themeBlack ? paymentMethodScreenStyles.blackCard :
-                    card.theme === bagPageConstants.themeSilver ? paymentMethodScreenStyles.silverCard :
-                      paymentMethodScreenStyles.purpleCard;
+                  card.theme === bagPageConstants.themeBlack
+                    ? paymentMethodScreenStyles.blackCard
+                    : card.theme === bagPageConstants.themeSilver
+                    ? paymentMethodScreenStyles.silverCard
+                    : paymentMethodScreenStyles.purpleCard;
 
                 return (
-                  <View key={card.id} style={paymentMethodScreenStyles.cardContainer}>
+                  <View
+                    key={card.id}
+                    style={paymentMethodScreenStyles.cardContainer}
+                  >
                     <TouchableOpacity
                       activeOpacity={0.9}
                       style={[paymentMethodScreenStyles.visualCard, cardStyle]}
                       onPress={() => setSelectedCardId(card.id)}
                     >
                       <View style={paymentMethodScreenStyles.goldChip} />
-                      <Text style={[paymentMethodScreenStyles.visualCardMask, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.darkText]}>
-                        {bagPageConstants.cardNumberMask}{card.last4}
+                      <Text
+                        style={[
+                          paymentMethodScreenStyles.visualCardMask,
+                          card.theme === bagPageConstants.themeSilver &&
+                            paymentMethodScreenStyles.darkText,
+                        ]}
+                      >
+                        {bagPageConstants.cardNumberMask}
+                        {card.last4}
                       </Text>
                       <View style={paymentMethodScreenStyles.cardLogoPosition}>
                         {card.brand === bagPageConstants.brandVisa ? (
-                          <Text style={[paymentMethodScreenStyles.cardBrandLogoText, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.visaBlueText]}>{bagPageConstants.brandVisa.toUpperCase()}</Text>
+                          <Text
+                            style={[
+                              paymentMethodScreenStyles.cardBrandLogoText,
+                              card.theme === bagPageConstants.themeSilver &&
+                                paymentMethodScreenStyles.visaBlueText,
+                            ]}
+                          >
+                            {bagPageConstants.brandVisa.toUpperCase()}
+                          </Text>
                         ) : (
-                          <View style={paymentMethodScreenStyles.cardBrandMcLogo}>
-                            <View style={paymentMethodScreenStyles.mcCircleLeft} />
-                            <View style={paymentMethodScreenStyles.mcCircleRight} />
+                          <View
+                            style={paymentMethodScreenStyles.cardBrandMcLogo}
+                          >
+                            <View
+                              style={paymentMethodScreenStyles.mcCircleLeft}
+                            />
+                            <View
+                              style={paymentMethodScreenStyles.mcCircleRight}
+                            />
                           </View>
                         )}
                       </View>
                       <View style={paymentMethodScreenStyles.cardFooterRow}>
                         <View>
-                          <Text style={[paymentMethodScreenStyles.visualCardLabel, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.grayLabel]}>{bagPageConstants.cardHolderNameLabel}</Text>
-                          <Text style={[paymentMethodScreenStyles.visualCardValue, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.darkText]}>{card.holderName}</Text>
+                          <Text
+                            style={[
+                              paymentMethodScreenStyles.visualCardLabel,
+                              card.theme === bagPageConstants.themeSilver &&
+                                paymentMethodScreenStyles.grayLabel,
+                            ]}
+                          >
+                            {bagPageConstants.cardHolderNameLabel}
+                          </Text>
+                          <Text
+                            style={[
+                              paymentMethodScreenStyles.visualCardValue,
+                              card.theme === bagPageConstants.themeSilver &&
+                                paymentMethodScreenStyles.darkText,
+                            ]}
+                          >
+                            {card.holderName}
+                          </Text>
                         </View>
                         <View style={{ alignItems: 'flex-end' }}>
-                          <Text style={[paymentMethodScreenStyles.visualCardLabel, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.grayLabel]}>{bagPageConstants.expireDateLabel}</Text>
-                          <Text style={[paymentMethodScreenStyles.visualCardValue, card.theme === bagPageConstants.themeSilver && paymentMethodScreenStyles.darkText]}>{card.expiryDate}</Text>
+                          <Text
+                            style={[
+                              paymentMethodScreenStyles.visualCardLabel,
+                              card.theme === bagPageConstants.themeSilver &&
+                                paymentMethodScreenStyles.grayLabel,
+                            ]}
+                          >
+                            {bagPageConstants.expireDateLabel}
+                          </Text>
+                          <Text
+                            style={[
+                              paymentMethodScreenStyles.visualCardValue,
+                              card.theme === bagPageConstants.themeSilver &&
+                                paymentMethodScreenStyles.darkText,
+                            ]}
+                          >
+                            {card.expiryDate}
+                          </Text>
                         </View>
                       </View>
                     </TouchableOpacity>
@@ -632,10 +924,24 @@ const PaymentMethodsScreen = () => {
                       activeOpacity={0.7}
                       onPress={() => setSelectedCardId(card.id)}
                     >
-                      <View style={[paymentMethodScreenStyles.customCheckSquare, isSelected && paymentMethodScreenStyles.activeCustomCheckSquare]}>
-                        {isSelected && <CheckIcon width={10} height={10} color={colors.white} />}
+                      <View
+                        style={[
+                          paymentMethodScreenStyles.customCheckSquare,
+                          isSelected &&
+                            paymentMethodScreenStyles.activeCustomCheckSquare,
+                        ]}
+                      >
+                        {isSelected && (
+                          <CheckIcon
+                            width={10}
+                            height={10}
+                            color={colors.white}
+                          />
+                        )}
                       </View>
-                      <Text style={paymentMethodScreenStyles.checkboxLabel}>{bagPageConstants.useDefaultCheckboxLabel}</Text>
+                      <Text style={paymentMethodScreenStyles.checkboxLabel}>
+                        {bagPageConstants.useDefaultCheckboxLabel}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 );
@@ -646,7 +952,9 @@ const PaymentMethodsScreen = () => {
               activeOpacity={0.8}
               onPress={() => setIsAddCardOpen(true)}
             >
-              <Text style={paymentMethodScreenStyles.fabIconText}>{bagPageConstants.plusSymbol}</Text>
+              <Text style={paymentMethodScreenStyles.fabIconText}>
+                {bagPageConstants.plusSymbol}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -667,9 +975,14 @@ const PaymentMethodsScreen = () => {
           <View style={paymentMethodScreenStyles.addCardDrawer}>
             <View style={paymentMethodScreenStyles.drawerHandle} />
 
-            <Text style={paymentMethodScreenStyles.drawerTitle}>{bagPageConstants.addNewCardTitle}</Text>
+            <Text style={paymentMethodScreenStyles.drawerTitle}>
+              {bagPageConstants.addNewCardTitle}
+            </Text>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={paymentMethodScreenStyles.drawerScroll}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={paymentMethodScreenStyles.drawerScroll}
+            >
               <BaseTextInput
                 label={bagPageConstants.nameOnCardLabel}
                 value={newCardName}
@@ -684,11 +997,15 @@ const PaymentMethodsScreen = () => {
                   onChangeText={handleCardNumberChange}
                 />
                 <View style={paymentMethodScreenStyles.brandIconInputPosition}>
-                  {getCardBrand(newCardNumber) === bagPageConstants.brandVisa ? (
+                  {getCardBrand(newCardNumber) ===
+                  bagPageConstants.brandVisa ? (
                     <View style={paymentMethodScreenStyles.visaSmallBadge}>
-                      <Text style={paymentMethodScreenStyles.visaSmallText}>{bagPageConstants.brandVisa.toUpperCase()}</Text>
+                      <Text style={paymentMethodScreenStyles.visaSmallText}>
+                        {bagPageConstants.brandVisa.toUpperCase()}
+                      </Text>
                     </View>
-                  ) : getCardBrand(newCardNumber) === bagPageConstants.brandMastercard ? (
+                  ) : getCardBrand(newCardNumber) ===
+                    bagPageConstants.brandMastercard ? (
                     <View style={paymentMethodScreenStyles.mcSmallBadge}>
                       <View style={paymentMethodScreenStyles.mcCircleLeft} />
                       <View style={paymentMethodScreenStyles.mcCircleRight} />
@@ -713,17 +1030,34 @@ const PaymentMethodsScreen = () => {
                 onChangeText={setNewCardCvv}
               />
               <TouchableOpacity
-                style={[paymentMethodScreenStyles.checkboxRow, { marginTop: 8, marginBottom: 24 }]}
+                style={[
+                  paymentMethodScreenStyles.checkboxRow,
+                  { marginTop: 8, marginBottom: 24 },
+                ]}
                 activeOpacity={0.7}
                 onPress={() => setIsDefaultNewCard(!isDefaultNewCard)}
               >
-                <View style={[paymentMethodScreenStyles.customCheckSquare, isDefaultNewCard && paymentMethodScreenStyles.activeCustomCheckSquare]}>
-                  {isDefaultNewCard && <CheckIcon width={10} height={10} color={colors.white} />}
+                <View
+                  style={[
+                    paymentMethodScreenStyles.customCheckSquare,
+                    isDefaultNewCard &&
+                      paymentMethodScreenStyles.activeCustomCheckSquare,
+                  ]}
+                >
+                  {isDefaultNewCard && (
+                    <CheckIcon width={10} height={10} color={colors.white} />
+                  )}
                 </View>
-                <Text style={paymentMethodScreenStyles.checkboxLabel}>{bagPageConstants.setDefaultCheckboxLabel}</Text>
+                <Text style={paymentMethodScreenStyles.checkboxLabel}>
+                  {bagPageConstants.setDefaultCheckboxLabel}
+                </Text>
               </TouchableOpacity>
               <BaseButton
-                title={isTokenizing ? bagPageConstants.securingCardBtnLabel : bagPageConstants.addCardBtn}
+                title={
+                  isTokenizing
+                    ? bagPageConstants.securingCardBtnLabel
+                    : bagPageConstants.addCardBtn
+                }
                 variant="primary"
                 fullWidth
                 isLoading={isTokenizing}
