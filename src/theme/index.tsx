@@ -6,5 +6,14 @@ export const colors = {
     dangerRed : "rgba(240, 31, 14, 1)",
     green : "rgba(42, 169, 82, 1)",
     gray : "rgb(155, 155, 155)",
-    silver : "rgb(196,196,196)"
+    silver : "rgb(196,196,196)",
+    lightPink : "rgba(184, 162, 162, 1)",
+    lightYellow : "rgba(226, 196, 162, 1)",
+    navyBlue : "rgba(28, 36, 66, 1)",
+    blue : "rgb(0, 51, 102)",
+    orange : "rgb(255, 102, 0)",
+    yellow : "rgb(255, 204, 0)",
+    purple : "rgba(63, 26, 113, 1)",
+    lightGold : "rgba(234, 224, 183, 1)",
+    gold : "rgba(212, 197, 144, 1)",
 }

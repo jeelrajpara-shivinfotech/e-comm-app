@@ -1,0 +1,13 @@
+import React from 'react';
+import Svg, { Path, SvgProps } from 'react-native-svg';
+
+const ChevronRightIcon = (props: SvgProps) => (
+  <Svg width={16} height={16} viewBox="0 0 16 16" fill="none" {...props}>
+    <Path
+      d="M5.72656 11.06L8.7799 8L5.72656 4.94L6.66656 4L10.6666 8L6.66656 12L5.72656 11.06Z"
+      fill="#222222"
+    />
+  </Svg>
+);
+
+export default ChevronRightIcon;
