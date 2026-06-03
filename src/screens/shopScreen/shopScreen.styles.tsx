@@ -550,7 +550,6 @@ export const filterStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.lightGray,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.05,
     shadowRadius: 5,
     elevation: 10,
