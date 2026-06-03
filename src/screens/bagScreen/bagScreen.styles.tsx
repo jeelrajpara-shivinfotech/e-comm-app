@@ -112,7 +112,7 @@ export const bagScreenStyles = StyleSheet.create({
     shadowRadius: 3,
   },
   quantityButtonText: {
-    fontSize: 14,
+    ...Typography.regular14,
     fontWeight: 'bold',
     color: colors.gray,
   },
@@ -225,7 +225,7 @@ export const bagScreenStyles = StyleSheet.create({
     alignItems: 'center',
   },
   appliedPromoCancelText: {
-    fontSize: 10,
+    ...Typography.regular12,
     fontWeight: 'bold',
     color: colors.gray,
   },
@@ -292,7 +292,7 @@ export const bagScreenStyles = StyleSheet.create({
     color: colors.white,
   },
   promoCardLeftSubtext: {
-    fontSize: 10,
+    ...Typography.regular10,
     fontWeight: '700',
     color: colors.white,
     marginTop: -4,
@@ -309,12 +309,12 @@ export const bagScreenStyles = StyleSheet.create({
     marginBottom: 2,
   },
   promoCardCode: {
-    fontSize: 11,
+    ...Typography.regular12,
     color: colors.black,
     fontWeight: '500',
   },
   promoCardValidity: {
-    fontSize: 11,
+    ...Typography.regular12,
     color: colors.gray,
     marginTop: 6,
   },
